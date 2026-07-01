@@ -267,6 +267,10 @@ button {
   transform: scale(1.06) rotate(-2deg);
 }
 
+.nav-menu {
+  display: contents;
+}
+
 .nav-links {
   display: flex;
   gap: 28px;
@@ -1150,39 +1154,99 @@ button {
   }
 }
 
-@media (max-width: 640px) {
-  .nav-links,
-  .nav-actions {
-    display: none;
-  }
-
+@media (max-width: 860px) {
   .nav-toggle {
     display: flex;
   }
 
-  .nav.open .nav-links {
-    display: flex;
-    flex-direction: column;
+  .nav-menu {
+    display: none;
     position: absolute;
     top: var(--header-height);
     left: 0;
     right: 0;
-    padding: 20px 24px;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 24px 24px;
     background: var(--bg-white);
     border-bottom: 1px solid var(--border);
-    gap: 4px;
+    box-shadow: var(--shadow-md);
+    max-height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
   }
 
-  .nav.open .nav-actions {
+  .nav.open .nav-menu {
     display: flex;
-    position: absolute;
-    top: calc(var(--header-height) + 140px);
-    left: 24px;
-    right: 24px;
   }
 
+  .nav-menu .nav-links,
+  .nav-menu .nav-actions {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .nav-menu .nav-actions {
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Force readable colours inside the panel, even on dark-header pages.
+     Scoped under .header so it outranks .home-page/.catalogue-page overrides. */
+  .header .nav-menu .nav-links a,
+  .header .nav-menu .nav-link {
+    color: var(--text-secondary);
+    padding: 10px 4px;
+    font-size: 1rem;
+    background: transparent;
+  }
+
+  .header .nav-menu .nav-links a:hover,
+  .header .nav-menu .nav-link:hover {
+    color: var(--text);
+    background: transparent;
+  }
+
+  .nav-menu .nav-actions .btn {
+    width: 100%;
+  }
+
+  .nav-menu .nav-actions .nav-link {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+
+  /* Hamburger → X */
+  .nav.open .nav-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .nav.open .nav-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav.open .nav-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 640px) {
   .search-form {
     flex-direction: column;
+  }
+
+  .section-head-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .section-head-row .link-arrow {
+    white-space: normal;
   }
 
   .cta-box,
@@ -1446,6 +1510,10 @@ button {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 18px;
+  }
+
   .auth-card {
     padding: 32px 24px;
     margin: 0 4px;
