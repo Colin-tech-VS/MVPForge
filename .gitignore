@@ -1,0 +1,9 @@
+_artworks_ref/
+instance/
+.env
+__pycache__/
+*.pyc
+*.db
+uploads/
+tools/scalingo-cli/
+

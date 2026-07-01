@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% from "site/_screen_label.html" import screen_label %}
+
+{% block title %}{{ project.title }} — MVPForge{% endblock %}
+{% block description %}{{ project.tagline }}{% endblock %}
+{% block body_class %}detail-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="detail-topbar">
+  <div class="container detail-topbar-inner">
+    <a href="{{ url_for('site.catalogue') }}" class="back-link">← Catalogue</a>
+    <div class="detail-topbar-actions">
+      {% if project.site_url %}
+      <a href="{{ project.site_url }}" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">Site live</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="detail-hero">
+  <div class="container">
+    <div class="detail-hero-layout">
+      <div class="detail-hero-copy reveal visible">
+        <div class="detail-badges">
+          <span class="mvp-category">{{ project.category }}</span>
+          {% if project.is_online %}
+          <span class="detail-live-badge"><span class="detail-live-dot"></span> En production</span>
+          {% else %}
+          <span class="detail-date-badge">Pas encore en ligne</span>
+          {% endif %}
+          {% if project.launch_date %}
+          <span class="detail-date-badge">Lancé le {{ project.formatted_launch_date() }}</span>
+          {% endif %}
+        </div>
+        <h1 class="detail-title">{{ project.title }}</h1>
+        <p class="detail-tagline">{{ project.tagline }}</p>
+        <p class="detail-price">{{ project.formatted_price() }} <span>€</span></p>
+
+        <div class="detail-buy-actions">
+          {% if project.is_sold() %}
+            {% if user_purchased %}
+            <span class="badge badge-live">Achat confirmé</span>
+            <a href="{{ url_for('account.purchases') }}" class="btn btn-primary btn-lg">Voir mes achats</a>
+            {% else %}
+            <span class="badge badge-draft">Vendu</span>
+            <p class="detail-buy-note">Ce projet n'est plus disponible à l'achat.</p>
+            {% endif %}
+          {% elif is_owner %}
+            <a href="{{ url_for('account.dashboard') }}" class="btn btn-outline btn-lg">Gérer mon annonce</a>
+          {% elif can_purchase %}
+            {% if current_user %}
+            <form method="post" action="{{ url_for('purchases.start_purchase', project_id=project.id) }}">
+              <button type="submit" class="btn btn-primary btn-lg">Acheter — {{ project.formatted_price() }} €</button>
+            </form>
+            <p class="detail-buy-note">Paiement sécurisé · transfert après achat (code non public)</p>
+            {% else %}
+            <a href="{{ url_for('auth.login', next=request.url) }}" class="btn btn-primary btn-lg">Se connecter pour acheter</a>
+            <a href="{{ url_for('auth.register', next=request.url) }}" class="btn btn-ghost btn-lg">Créer un compte</a>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        {% if project.stack_list %}
+        <div class="detail-stack">
+          {% for tech in project.stack_list %}
+          <span class="tech-tag">{{ tech }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="detail-hero-visual reveal visible">
+        {% if gallery %}
+        <figure class="detail-showcase" id="detail-showcase">
+          <div class="detail-showcase-frame">
+            <img
+              id="detail-showcase-img"
+              src="{{ url_for('site.serve_upload', project_id=project.id, filename=gallery[0].filename) }}"
+              alt="Aperçu {{ project.title }}"
+            >
+          </div>
+          {% if gallery|length > 1 %}
+          <figcaption class="detail-showcase-tabs" role="tablist">
+            {% for image in gallery %}
+            <button
+              type="button"
+              class="detail-showcase-tab{% if loop.first %} is-active{% endif %}"
+              role="tab"
+              aria-selected="{{ 'true' if loop.first else 'false' }}"
+              data-src="{{ url_for('site.serve_upload', project_id=project.id, filename=image.filename) }}"
+              data-label="{{ image.filename.replace('.png','').replace('vitrine-','').replace('admin-','Admin ').replace('-',' ') }}"
+            >
+              {{ screen_label(image.filename) }}
+            </button>
+            {% endfor %}
+          </figcaption>
+          {% endif %}
+        </figure>
+        {% elif project.cover_image %}
+        <figure class="detail-showcase">
+          <div class="detail-showcase-frame">
+            <img src="{{ url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) }}" alt="{{ project.title }}">
+          </div>
+        </figure>
+        {% else %}
+        <div class="detail-showcase-placeholder" style="--card-color: {{ project.color }}"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if analytics_metrics %}
+<section class="detail-metrics-band">
+  <div class="container">
+    <div class="detail-metrics-head">
+      <div>
+        <p class="detail-metrics-label">Traction réelle</p>
+        <h2>Chiffres analytics — {{ analytics_period }} derniers jours</h2>
+      </div>
+      <p class="detail-metrics-source">Chiffres déclarés par le vendeur</p>
+    </div>
+    <div class="detail-metrics-grid detail-metrics-grid-dynamic" style="--metric-cols: {{ analytics_metrics|length }}">
+      {% for metric in analytics_metrics %}
+      <article class="detail-metric{% if metric.accent %} detail-metric-accent{% endif %}">
+        <p class="detail-metric-value">{{ metric.value }}</p>
+        <p class="detail-metric-label">{{ metric.label }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section detail-content">
+  <div class="container detail-grid">
+    <div class="detail-main">
+      <section class="detail-card reveal">
+        <h2>Le produit</h2>
+        <div class="detail-prose">
+          {% for paragraph in project.description.split('\n\n') %}
+          <p>{{ paragraph }}</p>
+          {% endfor %}
+        </div>
+      </section>
+
+      {% if gallery|length > 1 %}
+      <section class="detail-card reveal">
+        <h2>Aperçu visuel</h2>
+        <p class="detail-card-lead">{% if project.is_online %}Captures réelles du produit en production.{% else %}Aperçus du produit (environnement de démo — pas encore lancé publiquement).{% endif %}</p>
+        <div class="detail-screens-grid">
+          {% for image in gallery %}
+          <button
+            type="button"
+            class="detail-screen{% if loop.first %} is-featured{% endif %}"
+            data-src="{{ url_for('site.serve_upload', project_id=project.id, filename=image.filename) }}"
+          >
+            <img src="{{ url_for('site.serve_upload', project_id=project.id, filename=image.filename) }}" alt="">
+            <span>{{ screen_label(image.filename) }}</span>
+          </button>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if project.strengths or project.weaknesses or project.resale_reason %}
+      <section class="detail-card reveal">
+        <h2>Pourquoi ce projet</h2>
+        <div class="detail-insights">
+          {% if project.strengths %}
+          <article class="detail-insight detail-insight-up">
+            <h3>Points forts</h3>
+            <p>{{ project.strengths }}</p>
+          </article>
+          {% endif %}
+          {% if project.weaknesses %}
+          <article class="detail-insight">
+            <h3>Points d'attention</h3>
+            <p>{{ project.weaknesses }}</p>
+          </article>
+          {% endif %}
+          {% if project.resale_reason %}
+          <article class="detail-insight detail-insight-sale">
+            <h3>Raison de la vente</h3>
+            <p>{{ project.resale_reason }}</p>
+          </article>
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+
+    <aside class="detail-aside reveal">
+      {% if project.is_online %}
+      <div class="detail-side-card">
+        <h3>En ligne aujourd'hui</h3>
+        <dl class="detail-facts">
+          {% if project.monthly_visitors is not none %}
+          <div><dt>Visiteurs / mois</dt><dd>{{ "{:,}".format(project.monthly_visitors).replace(",", " ") }}</dd></div>
+          {% endif %}
+          {% if project.monthly_revenue is not none %}
+          <div><dt>Revenu déclaré</dt><dd>{{ "{:,}".format(project.monthly_revenue).replace(",", " ") }} €</dd></div>
+          {% endif %}
+          {% if project.bounce_rate is not none %}
+          <div><dt>Taux de rebond</dt><dd>{{ project.bounce_rate }} %</dd></div>
+          {% endif %}
+          {% if project.conversion_rate is not none %}
+          <div><dt>Taux de conversion</dt><dd>{{ project.conversion_rate }} %</dd></div>
+          {% endif %}
+        </dl>
+      </div>
+      {% endif %}
+
+      {% if project.monetization_list or project.traffic_source %}
+      <div class="detail-side-card">
+        <h3>Acquisition & modèle</h3>
+        {% if project.monetization_list %}
+        <div class="detail-tags">
+          {% for item in project.monetization_list %}
+          <span class="tech-tag">{{ item }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if project.traffic_source %}
+        <p class="detail-traffic">{{ project.traffic_source }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="detail-side-card detail-side-cta">
+        <h3>{% if project.is_sold() %}Projet vendu{% else %}Acheter ce MVP{% endif %}</h3>
+        {% if project.is_sold() %}
+          {% if user_purchased %}
+          <p>Votre paiement est confirmé. Le vendeur vous contactera pour organiser le transfert complet.</p>
+          <a href="{{ url_for('account.purchases') }}" class="btn btn-primary btn-block">Mes achats</a>
+          {% else %}
+          <p>Ce projet a trouvé preneur et n'est plus en vente.</p>
+          <a href="{{ url_for('site.catalogue') }}" class="btn btn-outline btn-block">Voir le catalogue</a>
+          {% endif %}
+        {% elif is_owner %}
+          <p>Vous êtes le vendeur de cette annonce.</p>
+          <a href="{{ url_for('account.dashboard') }}" class="btn btn-primary btn-block">Mon tableau de bord</a>
+        {% elif can_purchase %}
+          <p>Paiement sécurisé par carte. Après achat, le vendeur initie le transfert (produit, docs, accompagnement).</p>
+          {% if current_user %}
+          <form method="post" action="{{ url_for('purchases.start_purchase', project_id=project.id) }}">
+            <button type="submit" class="btn btn-primary btn-block">Acheter — {{ project.formatted_price() }} €</button>
+          </form>
+          {% else %}
+          <a href="{{ url_for('auth.login', next=request.url) }}" class="btn btn-primary btn-block">Se connecter pour acheter</a>
+          <a href="{{ url_for('auth.register', next=request.url) }}" class="btn btn-outline btn-block">Créer un compte</a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/detail.js') }}"></script>
+{% endblock %}

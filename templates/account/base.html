@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block body_class %}account-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+{% block account_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<section class="account-header account-header-sm">
+  <div class="container account-header-inner">
+    <div>
+      <p class="account-label">Mon compte</p>
+      <h1 class="account-title">{{ db_user.display_name() }}</h1>
+      <p class="account-subtitle">{{ db_user.email }}</p>
+    </div>
+    <a href="{{ url_for('account.create_project') }}" class="btn btn-primary">+ Publier un MVP</a>
+  </div>
+</section>
+
+<div class="container account-shell">
+  <aside class="account-nav" aria-label="Navigation du compte">
+    <div class="account-nav-user">
+      <div class="account-avatar" aria-hidden="true">{{ db_user.display_name()[:1]|upper }}</div>
+      <div>
+        <p class="account-nav-name">{{ db_user.display_name() }}</p>
+        <p class="account-nav-email">{{ db_user.email }}</p>
+      </div>
+    </div>
+    <nav class="account-nav-links">
+      <a href="{{ url_for('account.dashboard') }}" class="account-nav-link{% if account_section == 'projects' %} is-active{% endif %}">Mes projets</a>
+      <a href="{{ url_for('account.purchases') }}" class="account-nav-link{% if account_section == 'purchases' %} is-active{% endif %}">Mes achats</a>
+      <a href="{{ url_for('account.profile') }}" class="account-nav-link{% if account_section == 'profile' %} is-active{% endif %}">Profil & coordonnées</a>
+      <a href="{{ url_for('account.security') }}" class="account-nav-link{% if account_section == 'security' %} is-active{% endif %}">Mot de passe & sécurité</a>
+    </nav>
+    <div class="account-nav-meta">
+      <p>Membre depuis {{ db_user.created_at.strftime('%d/%m/%Y') }}</p>
+      {% if db_user.auth_provider == 'local' %}
+      <p class="account-nav-badge">Compte local</p>
+      {% else %}
+      <p class="account-nav-badge">Connexion {{ db_user.auth_provider }}</p>
+      {% endif %}
+    </div>
+  </aside>
+
+  <div class="account-main">
+    {% block account_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "account/base.html" %}
+
+{% block title %}Sécurité — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Mot de passe & sécurité</h2>
+      <p class="section-desc">Protégez l'accès à votre compte et à vos annonces MVP.</p>
+    </div>
+  </div>
+
+  {% if db_user.auth_provider != 'local' %}
+  <div class="account-notice">
+    <p>Votre compte est connecté via <strong>{{ db_user.auth_provider }}</strong>. La modification du mot de passe se fait sur ce service.</p>
+  </div>
+  {% else %}
+  <form class="account-form account-form-narrow" method="post" action="{{ url_for('account.security') }}">
+    <div class="form-group">
+      <label for="current_password">Mot de passe actuel</label>
+      <input type="password" id="current_password" name="current_password" required autocomplete="current-password" placeholder="••••••••">
+    </div>
+
+    <div class="form-group">
+      <label for="new_password">Nouveau mot de passe</label>
+      <input type="password" id="new_password" name="new_password" required minlength="8" autocomplete="new-password" placeholder="8 caractères minimum">
+    </div>
+
+    <div class="form-group">
+      <label for="confirm_password">Confirmer le nouveau mot de passe</label>
+      <input type="password" id="confirm_password" name="confirm_password" required minlength="8" autocomplete="new-password" placeholder="••••••••">
+    </div>
+
+    <div class="account-form-actions">
+      <button type="submit" class="btn btn-primary">Mettre à jour le mot de passe</button>
+    </div>
+  </form>
+  {% endif %}
+</section>
+
+<section class="account-panel account-panel-muted">
+  <h2 class="account-panel-title">Informations du compte</h2>
+  <dl class="account-summary-list">
+    <div><dt>E-mail de connexion</dt><dd>{{ db_user.email }}</dd></div>
+    <div><dt>Type de compte</dt><dd>{{ 'Local (e-mail + mot de passe)' if db_user.auth_provider == 'local' else db_user.auth_provider }}</dd></div>
+    <div><dt>Inscription</dt><dd>{{ db_user.created_at.strftime('%d/%m/%Y à %H:%M') }}</dd></div>
+    {% if db_user.updated_at %}
+    <div><dt>Dernière mise à jour</dt><dd>{{ db_user.updated_at.strftime('%d/%m/%Y à %H:%M') }}</dd></div>
+    {% endif %}
+  </dl>
+  <a href="{{ url_for('auth.logout') }}" class="btn btn-outline btn-sm">Se déconnecter</a>
+</section>
+{% endblock %}

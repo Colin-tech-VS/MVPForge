@@ -1,0 +1,83 @@
+{% extends "account/base.html" %}
+
+{% block title %}Mes projets — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Mes projets MVP</h2>
+      <p class="section-desc">
+        {{ catalogue_count }} publié{{ 's' if catalogue_count != 1 else '' }} sur le catalogue
+        {% if pending_count %} · {{ pending_count }} en attente de paiement{% endif %}
+      </p>
+    </div>
+  </div>
+
+  {% if projects %}
+  <div class="account-projects">
+    {% for project in projects %}
+    <article class="account-project-card">
+      {% if project.cover_image %}
+      <div class="account-project-visual account-project-visual-img">
+        <img src="{{ url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) }}" alt="">
+      </div>
+      {% else %}
+      <div class="account-project-visual" style="--card-color: {{ project.color }}"></div>
+      {% endif %}
+      <div class="account-project-body">
+        <div class="account-project-meta">
+          <span class="mvp-category">{{ project.category }}</span>
+          <span class="account-project-price">{{ project.formatted_price() }} €</span>
+        </div>
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.tagline }}</p>
+        {% if project.is_online %}
+        <p class="account-project-stat">En ligne · {{ project.monthly_visitors or 0 }} visiteurs/mois</p>
+        {% elif project.is_sold() %}
+        <p class="account-project-stat account-project-stat-sold">Vendu{% if project.sold_at %} · {{ project.sold_at.strftime('%d/%m/%Y') }}{% endif %}</p>
+        {% else %}
+        <p class="account-project-stat account-project-stat-muted">Pas encore en ligne</p>
+        {% endif %}
+        {% if project.stack_list %}
+        <div class="mvp-stack">
+          {% for tech in project.stack_list[:4] %}
+          <span class="tech-tag">{{ tech }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="account-project-actions">
+          <span class="status-badge status-{{ project.status }}">{{ project.status_label() }}</span>
+          {% if project.status == 'pending_payment' %}
+          <a href="{{ url_for('account.listing_payment', project_id=project.id) }}" class="btn btn-primary btn-sm">Payer {{ listing_fee_eur|default(24) }} €</a>
+          {% elif project.is_catalogue_visible() %}
+          <a href="{{ url_for('site.project_detail', project_id=project.id) }}" class="btn btn-ghost btn-sm">Voir la fiche</a>
+          {% endif %}
+          <form method="post" action="{{ url_for('account.delete_project', project_id=project.id) }}" onsubmit="return confirm('Supprimer ce projet ?');">
+            <button type="submit" class="btn btn-ghost btn-sm">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-card empty-card-lg">
+    <h3>Aucun projet pour l'instant</h3>
+    <p>Publiez votre premier MVP et mettez-le en vente sur le catalogue.</p>
+    <a href="{{ url_for('account.create_project') }}" class="btn btn-primary">Publier un MVP</a>
+  </div>
+  {% endif %}
+</section>
+
+<section class="account-panel account-panel-muted">
+  <h2 class="account-panel-title">Résumé du profil</h2>
+  <dl class="account-summary-list">
+    <div><dt>Nom</dt><dd>{{ db_user.name or '—' }}</dd></div>
+    <div><dt>Téléphone</dt><dd>{{ db_user.phone or '—' }}</dd></div>
+    <div><dt>Entreprise</dt><dd>{{ db_user.company or '—' }}</dd></div>
+    <div><dt>Localisation</dt><dd>{{ db_user.location or '—' }}</dd></div>
+  </dl>
+  <a href="{{ url_for('account.profile') }}" class="btn btn-outline btn-sm">Modifier mes coordonnées</a>
+</section>
+{% endblock %}

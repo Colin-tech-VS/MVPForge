@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% from "site/_mvp_card.html" import mvp_card %}
+
+{% block title %}MVPForge — Marketplace de projets MVP{% endblock %}
+{% block description %}Achetez et vendez des projets MVP complets, prêts à déployer.{% endblock %}
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+<section class="home-hero">
+  <div class="home-hero-bg" aria-hidden="true"></div>
+  <div class="container home-hero-inner">
+    <div class="home-hero-grid">
+      <div class="home-hero-copy">
+        <p class="eyebrow reveal">Marketplace de projets MVP</p>
+        <h1 class="display-title reveal reveal-delay-1">
+          Des produits <em>réels</em>,<br>prêts à reprendre.
+        </h1>
+        <p class="home-hero-lead reveal reveal-delay-2">
+          Analytics, documentation et transfert sécurisé inclus à l'achat.
+          Parcourez des MVPs en ligne avec traction mesurée — pas des maquettes.
+        </p>
+        <div class="home-hero-actions reveal reveal-delay-3">
+          <a href="{{ url_for('site.catalogue') }}" class="btn btn-primary btn-lg">Explorer le catalogue</a>
+          <a href="{{ url_for('site.how_it_works') }}" class="btn btn-ghost btn-lg">Comment ça marche</a>
+        </div>
+        {% if stats.total %}
+        <dl class="home-stats reveal reveal-delay-3">
+          <div>
+            <dt>{{ stats.total }}</dt>
+            <dd>projets listés</dd>
+          </div>
+          <div>
+            <dt>{{ stats.online }}</dt>
+            <dd>en production</dd>
+          </div>
+          {% if stats.min_price %}
+          <div>
+            <dt>{{ "{:,}".format(stats.min_price).replace(",", " ") }} €</dt>
+            <dd>à partir de</dd>
+          </div>
+          {% endif %}
+        </dl>
+        {% endif %}
+      </div>
+
+      {% if showcase %}
+      <div class="home-showcase reveal reveal-delay-2">
+        {% for mvp in showcase %}
+        <a
+          href="{{ url_for('site.project_detail', project_id=mvp.id) }}"
+          class="home-showcase-card{% if loop.first %} is-primary{% endif %}"
+          style="--card-color: {{ mvp.color }}"
+        >
+          <div class="home-showcase-frame">
+            <div class="home-showcase-chrome" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            {% if mvp.cover_image %}
+            <img
+              src="{{ url_for('site.serve_upload', project_id=mvp.id, filename=mvp.cover_image.filename) }}"
+              alt="Aperçu {{ mvp.title }}"
+              loading="{{ 'eager' if loop.first else 'lazy' }}"
+            >
+            {% else %}
+            <div class="home-showcase-fallback"></div>
+            {% endif %}
+            <div class="home-showcase-overlay">
+              {% if mvp.is_online %}
+              <span class="badge badge-live"><span class="live-dot"></span> En ligne</span>
+              {% endif %}
+              <span class="badge badge-price">{{ mvp.formatted_price() }} €</span>
+            </div>
+          </div>
+          <div class="home-showcase-caption">
+            <span class="mvp-category">{{ mvp.category }}</span>
+            <strong>{{ mvp.title }}</strong>
+            {% if mvp.monthly_visitors %}
+            <span class="home-showcase-metric">{{ "{:,}".format(mvp.monthly_visitors).replace(",", " ") }} visiteurs / 30 j</span>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if categories %}
+<section class="home-categories">
+  <div class="container">
+    <div class="section-head-row reveal">
+      <div>
+        <p class="eyebrow">Parcourir</p>
+        <h2 class="section-title">Trouver par domaine</h2>
+      </div>
+      <a href="{{ url_for('site.categories') }}" class="link-arrow">Toutes les catégories</a>
+    </div>
+    <div class="category-rail reveal">
+      {% for cat in categories %}
+      <a href="{{ url_for('site.categories') }}#category-chips" class="category-pill">
+        <span>{{ cat.name }}</span>
+        <span class="category-pill-count">{{ cat.count }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if featured %}
+<section class="section home-featured">
+  <div class="container">
+    <div class="section-head-row reveal">
+      <div>
+        <p class="eyebrow">Catalogue</p>
+        <h2 class="section-title">Tous les projets disponibles</h2>
+        <p class="section-desc">Captures réelles, métriques déclarées, transfert après achat.</p>
+      </div>
+      <a href="{{ url_for('site.catalogue') }}" class="link-arrow">Voir le catalogue complet</a>
+    </div>
+    <div class="mvp-grid mvp-grid-featured reveal">
+      {% for mvp in featured %}
+      {{ mvp_card(mvp, large=true) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="section home-empty">
+  <div class="container">
+    <div class="empty-card empty-card-lg reveal">
+      <h3>Le catalogue se remplit</h3>
+      <p>Aucun MVP publié pour le moment — soyez le premier à lister votre projet.</p>
+      {% if current_user %}
+        <a href="{{ url_for('account.create_project') }}" class="btn btn-primary btn-lg">Publier un MVP</a>
+      {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Créer un compte vendeur</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="home-trust">
+  <div class="container">
+    <div class="trust-grid reveal">
+      <article class="trust-card">
+        <span class="trust-icon" aria-hidden="true">◈</span>
+        <h3>Produits en production</h3>
+        <p>Captures d'écran réelles, liens live et métriques analytics quand le vendeur les partage.</p>
+      </article>
+      <article class="trust-card">
+        <span class="trust-icon" aria-hidden="true">⌁</span>
+        <h3>Transfert complet</h3>
+        <p>Documentation, accompagnement et transfert complet — vous reprenez un actif, pas une idée.</p>
+      </article>
+      <article class="trust-card">
+        <span class="trust-icon" aria-hidden="true">◎</span>
+        <h3>Filtres avancés</h3>
+        <p>Recherche par nom, catégorie, stack, budget et statut en ligne sur le catalogue.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div class="cta-panel-copy">
+        <p class="eyebrow eyebrow-light">Vendeurs</p>
+        <h2>Vous avez un MVP à céder ?</h2>
+        <p>Publiez une fiche complète avec captures, traction et conditions de transfert.</p>
+      </div>
+      {% if current_user %}
+        <a href="{{ url_for('account.create_project') }}" class="btn btn-light btn-lg">Publier mon MVP</a>
+      {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">Commencer à vendre</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

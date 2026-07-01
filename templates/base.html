@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MVPForge{% endblock %}</title>
+  <meta name="description" content="{% block description %}Marketplace de projets MVP{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="{{ url_for('site.home') }}" class="logo">
+        <span class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="8" fill="currentColor"/>
+            <path d="M8 18L14 8L20 18" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 18H18" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="logo-text">MVPForge</span>
+      </a>
+      <div class="nav-links">
+        <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
+        <a href="{{ url_for('site.categories') }}">Catégories</a>
+        <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+      </div>
+      <div class="nav-actions">
+        {% if current_user %}
+          <a href="{{ url_for('account.dashboard') }}" class="nav-link">Mon compte</a>
+          <a href="{{ url_for('account.create_project') }}" class="btn btn-primary">Vendre un MVP</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="nav-link">Connexion</a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Inscription</a>
+        {% endif %}
+      </div>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true">
+        {% for category, message in messages %}
+          <div class="toast toast-{{ category }}" role="alert">
+            <span class="toast-message">{{ message }}</span>
+            <button type="button" class="toast-close" aria-label="Fermer">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="{{ url_for('site.home') }}" class="logo">
+          <span class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+              <rect width="28" height="28" rx="8" fill="currentColor"/>
+              <path d="M8 18L14 8L20 18" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 18H18" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="logo-text">MVPForge</span>
+        </a>
+        <p>La marketplace pour projets MVP prêts à lancer.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plateforme</h4>
+        <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
+        <a href="{{ url_for('site.categories') }}">Catégories</a>
+        <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compte</h4>
+        {% if current_user %}
+          <a href="{{ url_for('account.dashboard') }}">Mon compte</a>
+          <a href="{{ url_for('account.create_project') }}">Publier un MVP</a>
+          <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Connexion</a>
+          <a href="{{ url_for('auth.register') }}">Inscription</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 MVPForge. Tous droits réservés.</span>
+    </div>
+  </footer>
+  {% endblock %}
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

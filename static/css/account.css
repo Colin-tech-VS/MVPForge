@@ -1,0 +1,394 @@
+/* ── Account area ── */
+
+.account-page .account-header-sm {
+  padding-bottom: 28px;
+}
+
+.account-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 32px 0 72px;
+}
+
+.account-nav {
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.account-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.account-nav-name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.account-nav-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+.account-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-nav-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.account-nav-link:hover {
+  background: var(--bg-alt);
+  color: var(--text);
+}
+
+.account-nav-link.is-active {
+  background: color-mix(in srgb, var(--accent) 10%, white);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.account-nav-meta {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.account-nav-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 100px;
+  background: var(--bg-alt);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.account-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.account-panel {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+
+.account-panel-muted {
+  background: var(--bg);
+}
+
+.account-panel-head {
+  margin-bottom: 24px;
+}
+
+.account-panel-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.account-form-narrow {
+  max-width: 420px;
+}
+
+.account-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.account-form-divider {
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.account-form-divider h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.account-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.account-summary-list {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.account-summary-list div {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.account-summary-list dt {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.account-summary-list dd {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.account-notice {
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.account-project-stat-muted {
+  color: var(--text-muted);
+}
+
+.account-project-stat-sold {
+  color: #6B7280;
+}
+
+@media (max-width: 900px) {
+  .account-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .account-nav {
+    position: static;
+  }
+
+  .account-nav-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .account-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-summary-list div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* ── Listing fee & payment ── */
+
+.listing-fee-notice {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--accent-light);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.listing-fee-notice-exempt {
+  background: color-mix(in srgb, var(--accent-bright) 12%, white);
+  border-color: color-mix(in srgb, var(--accent-bright) 35%, var(--border));
+}
+
+.account-panel-narrow {
+  max-width: 640px;
+}
+
+.listing-payment-head {
+  margin-bottom: 24px;
+}
+
+.listing-payment-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.listing-payment-project {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.listing-payment-project img,
+.listing-payment-fallback {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.listing-payment-fallback {
+  background: linear-gradient(135deg, var(--card-color, var(--accent)), #0B0D10);
+}
+
+.listing-payment-project h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.listing-payment-project p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.listing-payment-link {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.listing-payment-summary {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.listing-payment-summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.listing-payment-summary dt {
+  color: var(--text-secondary);
+}
+
+.listing-payment-summary dd {
+  font-weight: 700;
+}
+
+.listing-payment-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.listing-payment-warn {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.purchase-includes {
+  margin: 0 0 24px;
+  padding-left: 20px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.purchase-list {
+  display: grid;
+  gap: 14px;
+}
+
+.purchase-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.purchase-card h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.purchase-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.purchase-card-meta {
+  margin-top: 10px !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mvp-traction-sold {
+  color: var(--text-muted) !important;
+  border-top-color: var(--border);
+}
+
+.mvp-traction-sold .mvp-traction-dot {
+  background: var(--text-muted);
+  box-shadow: none;
+}

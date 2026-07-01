@@ -1,0 +1,66 @@
+{% extends "account/base.html" %}
+
+{% block title %}Paiement mise en ligne — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel account-panel-narrow">
+  <div class="listing-payment-head">
+    <p class="eyebrow">Publication catalogue</p>
+    <h2 class="section-title">Finaliser la mise en ligne</h2>
+    <p class="section-desc">
+      Votre fiche est enregistrée. Pour la publier sur le catalogue,
+      le tarif est de <strong>{{ listing_fee_eur }} €</strong> par annonce (paiement unique).
+    </p>
+  </div>
+
+  <article class="listing-payment-card">
+    <div class="listing-payment-project">
+      {% if project.cover_image %}
+      <img
+        src="{{ url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) }}"
+        alt="{{ project.title }}"
+      >
+      {% else %}
+      <div class="listing-payment-fallback" style="--card-color: {{ project.color }}"></div>
+      {% endif %}
+      <div>
+        <span class="mvp-category">{{ project.category }}</span>
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.tagline }}</p>
+        {% if project.site_url %}
+        <a href="{{ project.site_url }}" target="_blank" rel="noopener noreferrer" class="listing-payment-link">{{ project.site_url }}</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <dl class="listing-payment-summary">
+      <div>
+        <dt>Frais de mise en ligne</dt>
+        <dd>{{ listing_fee_eur }} €</dd>
+      </div>
+      <div>
+        <dt>Statut</dt>
+        <dd>En attente de paiement</dd>
+      </div>
+    </dl>
+
+    <div class="listing-payment-actions">
+      {% if stripe_enabled %}
+      <form method="post">
+        <input type="hidden" name="action" value="stripe">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Payer {{ listing_fee_eur }} € avec Stripe</button>
+      </form>
+      {% elif dev_simulate %}
+      <form method="post">
+        <input type="hidden" name="action" value="simulate">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Simuler le paiement (dev)</button>
+      </form>
+      <p class="form-hint">Stripe non configuré — bouton visible uniquement en mode debug.</p>
+      {% else %}
+      <p class="listing-payment-warn">Le paiement Stripe sera activé prochainement. Votre annonce reste en attente.</p>
+      {% endif %}
+      <a href="{{ url_for('account.dashboard') }}" class="btn btn-ghost btn-block">Retour au tableau de bord</a>
+    </div>
+  </article>
+</section>
+{% endblock %}

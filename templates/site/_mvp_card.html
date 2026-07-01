@@ -1,0 +1,49 @@
+{% macro mvp_card(mvp, large=false) %}
+<a href="{{ url_for('site.project_detail', project_id=mvp.id) }}" class="mvp-card-link"
+  data-title="{{ mvp.title }}"
+  data-tagline="{{ mvp.tagline }}"
+  data-category="{{ mvp.category }}"
+  data-price="{{ mvp.price }}"
+  data-stack="{{ mvp.stack|lower }}"
+  data-online="{{ 1 if mvp.is_online else 0 }}"
+>
+<article class="mvp-card{% if large %} mvp-card-lg{% endif %}">
+  <div class="mvp-card-visual-wrap">
+    {% if mvp.cover_image %}
+    <div class="mvp-card-visual mvp-card-visual-img">
+      <img src="{{ url_for('site.serve_upload', project_id=mvp.id, filename=mvp.cover_image.filename) }}" alt="{{ mvp.title }}" loading="lazy">
+    </div>
+    {% else %}
+    <div class="mvp-card-visual" style="--card-color: {{ mvp.color }}"></div>
+    {% endif %}
+    <div class="mvp-card-badges">
+      {% if mvp.is_online %}
+      <span class="badge badge-live"><span class="live-dot"></span> Live</span>
+      {% else %}
+      <span class="badge badge-draft">Hors ligne</span>
+      {% endif %}
+      <span class="badge badge-price">{{ mvp.formatted_price() }} €</span>
+    </div>
+    <div class="mvp-card-hover-cta">Voir le projet →</div>
+  </div>
+  <div class="mvp-card-body">
+    <span class="mvp-category">{{ mvp.category }}</span>
+    <h3 class="mvp-title">{{ mvp.title }}</h3>
+    <p class="mvp-tagline">{{ mvp.tagline }}</p>
+    {% if mvp.stack_list %}
+    <div class="mvp-stack">
+      {% for tech in mvp.stack_list[:4] %}
+      <span class="tech-tag">{{ tech }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if mvp.is_online and mvp.monthly_visitors %}
+    <p class="mvp-traction">
+      <span class="mvp-traction-dot"></span>
+      {{ "{:,}".format(mvp.monthly_visitors).replace(",", " ") }} visiteurs / 30 j
+    </p>
+    {% endif %}
+  </div>
+</article>
+</a>
+{% endmacro %}

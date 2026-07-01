@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Comment ça marche — MVPForge{% endblock %}
+{% block body_class %}how-page{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="eyebrow">Processus</p>
+    <h1 class="page-title">Comment ça marche</h1>
+    <p class="page-subtitle">Trois étapes simples pour passer de l'idée au lancement.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="steps-grid steps-grid-page">
+      <article class="step-card reveal">
+        <span class="step-num">01</span>
+        <h3>Parcourez le catalogue</h3>
+        <p>Explorez les MVPs publiés, filtrez par catégorie, stack technique ou budget. Chaque fiche détaille le projet, ses métriques et ce qui est inclus.</p>
+      </article>
+      <article class="step-card reveal reveal-delay-1">
+        <span class="step-num">02</span>
+        <h3>Achetez en toute confiance</h3>
+        <p>Paiement sécurisé, transfert complet après achat et accompagnement vendeur.</p>
+      </article>
+      <article class="step-card reveal reveal-delay-2">
+        <span class="step-num">03</span>
+        <h3>Déployez et lancez</h3>
+        <p>Personnalisez, mettez en ligne sur votre infrastructure et commencez à acquérir vos premiers utilisateurs — en jours, pas en mois.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Pour les acheteurs</h3>
+        <p>Gagnez des mois de développement. Reprenez un produit existant, validé ou en ligne, avec une base technique solide.</p>
+      </div>
+      <div class="info-card">
+        <h3>Pour les vendeurs</h3>
+        <p>Monétisez un MVP que vous n'exploitez plus. Chaque annonce est publiée pour <strong>24 €</strong> (paiement unique Stripe), qu'il soit en production ou hors ligne.</p>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="{{ url_for('site.catalogue') }}" class="btn btn-primary">Explorer le catalogue</a>
+      {% if current_user %}
+        <a href="{{ url_for('account.create_project') }}" class="btn btn-ghost">Publier mon MVP</a>
+      {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn btn-ghost">Créer un compte</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

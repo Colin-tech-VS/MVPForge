@@ -1,0 +1,34 @@
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
+
+def _normalize_database_url(url: str | None) -> str | None:
+    if not url:
+        return None
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql://", 1)
+    return url
+
+
+class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
+    SQLALCHEMY_DATABASE_URI = _normalize_database_url(
+        os.environ.get("DATABASE_URL")
+    ) or f"sqlite:///{BASE_DIR / 'instance' / 'mvpforge.db'}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAX_CONTENT_LENGTH = 105 * 1024 * 1024  # ~20 images × 5 Mo
+
+    # Catalogue Colin (seed) au démarrage — désactiver en prod si besoin : SEED_CATALOG=0
+    SEED_CATALOG = os.environ.get("SEED_CATALOG", "1") == "1"
+
+    # "local" = SQLite | "supabase" = Supabase Auth
+    AUTH_BACKEND = os.environ.get("AUTH_BACKEND", "local")
+
+    SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+    SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+
+    STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+    STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
+    STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")

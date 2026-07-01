@@ -1,0 +1,82 @@
+{% macro catalogue_search(categories=[]) %}
+<div class="catalogue-search" data-catalogue-search>
+  <div class="catalogue-search-bar">
+    <label class="catalogue-search-field" for="catalogue-q">
+      <span class="catalogue-search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M14 14L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <input
+        type="search"
+        id="catalogue-q"
+        class="catalogue-search-input"
+        placeholder="Rechercher par nom, catégorie, stack, prix…"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <span class="catalogue-search-glow" aria-hidden="true"></span>
+    </label>
+    <button type="button" class="catalogue-filters-btn" id="catalogue-filters-toggle" aria-expanded="false" aria-controls="catalogue-filters-panel">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M2 4h14M5 9h8M8 14h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span>Filtres</span>
+      <span class="catalogue-filters-badge hidden" id="catalogue-filters-badge">0</span>
+    </button>
+  </div>
+
+  <div class="catalogue-filters-panel" id="catalogue-filters-panel" hidden>
+    <div class="catalogue-filters-grid">
+      <div class="catalogue-filter-block">
+        <span class="catalogue-filter-label">Catégorie</span>
+        <select id="catalogue-category" class="catalogue-select">
+          <option value="">Toutes les catégories</option>
+          {% for cat in categories %}
+          <option value="{{ cat.name }}">{{ cat.name }} ({{ cat.count }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="catalogue-filter-block catalogue-filter-block-wide">
+        <span class="catalogue-filter-label">Budget</span>
+        <div class="catalogue-price-pills" role="group" aria-label="Fourchette de prix">
+          <button type="button" class="catalogue-pill is-active" data-price="">Tous</button>
+          <button type="button" class="catalogue-pill" data-price="0-15000">&lt; 15 k€</button>
+          <button type="button" class="catalogue-pill" data-price="15000-30000">15 – 30 k€</button>
+          <button type="button" class="catalogue-pill" data-price="30000-50000">30 – 50 k€</button>
+          <button type="button" class="catalogue-pill" data-price="50000-999999999">50 k€ +</button>
+        </div>
+      </div>
+
+      <div class="catalogue-filter-block">
+        <span class="catalogue-filter-label">Trier par</span>
+        <select id="catalogue-sort" class="catalogue-select">
+          <option value="default">Pertinence</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="name-asc">Nom A → Z</option>
+        </select>
+      </div>
+
+      <div class="catalogue-filter-block catalogue-filter-block-check">
+        <label class="catalogue-check">
+          <input type="checkbox" id="catalogue-online">
+          <span class="catalogue-check-ui"></span>
+          <span>En ligne uniquement</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="catalogue-search-meta">
+    <p class="catalogue-results" aria-live="polite">
+      <span class="catalogue-results-count" id="catalogue-count">0</span>
+      <span id="catalogue-count-label">projets</span>
+    </p>
+    <div class="catalogue-active-tags" id="catalogue-active-tags"></div>
+    <button type="button" class="catalogue-reset hidden" id="catalogue-reset">Réinitialiser</button>
+  </div>
+</div>
+{% endmacro %}

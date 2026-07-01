@@ -1,0 +1,14 @@
+{% macro screen_label(filename) %}
+{% if 'admin-analytics' in filename %}Analytics admin
+{% elif 'admin-login' in filename or 'admin' in filename %}Admin
+{% elif 'crm' in filename %}CRM
+{% elif 'offre' in filename %}Offre
+{% elif 'marketplace' in filename %}Marketplace
+{% elif 'portfolio' in filename %}Portfolio
+{% elif 'galeries' in filename %}Galeries
+{% elif 'blog' in filename %}Blog
+{% elif 'guide' in filename %}Guide
+{% elif 'home' in filename %}Accueil
+{% else %}Aperçu
+{% endif %}
+{% endmacro %}

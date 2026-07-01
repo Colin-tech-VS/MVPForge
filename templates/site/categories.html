@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "site/_mvp_card.html" import mvp_card %}
+{% from "site/_catalogue_search.html" import catalogue_search %}
+
+{% block title %}Catégories — MVPForge{% endblock %}
+{% block body_class %}catalogue-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/catalogue-search.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-catalogue">
+  <div class="container">
+    <p class="eyebrow">Catégories</p>
+    <h1 class="page-title">Explorer par domaine</h1>
+    <p class="page-subtitle">Trouvez le MVP qui correspond à votre marché cible.</p>
+    {% if mvps %}
+    {{ catalogue_search(categories) }}
+    {% endif %}
+  </div>
+</section>
+
+{% if categories %}
+<section class="section catalogue-chips-section">
+  <div class="container">
+    <div class="categories-grid categories-grid-page" id="category-chips">
+      {% for cat in categories %}
+      <button type="button" class="category-chip category-filter" data-category="{{ cat.name }}">
+        <span class="category-chip-name">{{ cat.name }}</span>
+        <span class="category-chip-count">{{ cat.count }} projet{{ 's' if cat.count > 1 else '' }}</span>
+      </button>
+      {% endfor %}
+      <button type="button" class="category-chip category-filter is-active" data-category="">Tous</button>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section-alt catalogue-section">
+  <div class="container">
+    {% if mvps %}
+    <div class="mvp-grid catalogue-grid" id="catalogue-grid" data-category-chips="true">
+      {% for mvp in mvps %}
+      <div class="category-mvp-wrap">
+        {{ mvp_card(mvp) }}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="catalogue-empty hidden" id="catalogue-empty">
+      <div class="catalogue-empty-icon" aria-hidden="true">⌕</div>
+      <h3>Aucun résultat</h3>
+      <p>Essayez une autre catégorie ou modifiez vos filtres.</p>
+      <button type="button" class="btn btn-outline btn-sm" id="catalogue-empty-reset">Réinitialiser</button>
+    </div>
+    {% else %}
+    <div class="empty-card">
+      <p>Aucune catégorie pour le moment — le catalogue est vide.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/catalogue-search.js') }}"></script>
+{% endblock %}

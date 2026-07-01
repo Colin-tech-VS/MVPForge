@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Acheter {{ project.title }} — MVPForge{% endblock %}
+{% block body_class %}catalogue-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-catalogue">
+  <div class="container">
+    <p class="eyebrow">Achat MVP</p>
+    <h1 class="page-title">Finaliser votre achat</h1>
+    <p class="page-subtitle">Paiement sécurisé — le transfert est organisé avec le vendeur après confirmation.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="account-panel-narrow" style="margin: 0 auto;">
+      <article class="listing-payment-card">
+        <div class="listing-payment-project">
+          {% if project.cover_image %}
+          <img
+            src="{{ url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) }}"
+            alt="{{ project.title }}"
+          >
+          {% else %}
+          <div class="listing-payment-fallback" style="--card-color: {{ project.color }}"></div>
+          {% endif %}
+          <div>
+            <span class="mvp-category">{{ project.category }}</span>
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.tagline }}</p>
+          </div>
+        </div>
+
+        <dl class="listing-payment-summary">
+          <div>
+            <dt>Prix du projet</dt>
+            <dd>{{ purchase.formatted_amount() }} €</dd>
+          </div>
+          <div>
+            <dt>Inclus après paiement</dt>
+            <dd>Transfert vendeur</dd>
+          </div>
+        </dl>
+
+        <ul class="purchase-includes">
+          <li>Transfert sécurisé avec le vendeur</li>
+          <li>Documentation et accompagnement</li>
+          <li>Code source remis en privé — jamais exposé sur la vitrine</li>
+        </ul>
+
+        <div class="listing-payment-actions">
+          {% if stripe_enabled %}
+          <form method="post">
+            <input type="hidden" name="action" value="stripe">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Payer {{ purchase.formatted_amount() }} € avec Stripe
+            </button>
+          </form>
+          {% elif dev_simulate %}
+          <form method="post">
+            <input type="hidden" name="action" value="simulate">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Simuler l'achat (dev)
+            </button>
+          </form>
+          {% else %}
+          <p class="listing-payment-warn">Le paiement en ligne sera activé prochainement.</p>
+          {% endif %}
+          <a href="{{ url_for('site.project_detail', project_id=project.id) }}" class="btn btn-ghost btn-block">Retour à la fiche</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "account/base.html" %}
+
+{% block title %}Profil — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Profil & coordonnées</h2>
+      <p class="section-desc">Ces informations vous identifient auprès des acheteurs et vendeurs sur MVPForge.</p>
+    </div>
+  </div>
+
+  <form class="account-form" method="post" action="{{ url_for('account.profile') }}">
+    <div class="account-form-grid">
+      <div class="form-group">
+        <label for="name">Nom complet</label>
+        <input type="text" id="name" name="name" required minlength="2" autocomplete="name" value="{{ (form.get('name') if form else db_user.name) or '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required autocomplete="email" value="{{ (form.get('email') if form else db_user.email) or '' }}">
+        {% if db_user.auth_provider == 'local' %}
+        <span class="form-hint">Changer l'e-mail nécessite votre mot de passe actuel ci-dessous.</span>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Téléphone</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+33 6 12 34 56 78" value="{{ (form.get('phone') if form else db_user.phone) or '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="company">Entreprise / structure</label>
+        <input type="text" id="company" name="company" autocomplete="organization" placeholder="Ex : Ma startup SAS" value="{{ (form.get('company') if form else db_user.company) or '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="location">Ville / pays</label>
+        <input type="text" id="location" name="location" autocomplete="address-level2" placeholder="Ex : Paris, France" value="{{ (form.get('location') if form else db_user.location) or '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="website">Site web</label>
+        <input type="url" id="website" name="website" autocomplete="url" placeholder="https://monsite.com" value="{{ (form.get('website') if form else db_user.website) or '' }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="bio">Bio courte</label>
+      <textarea id="bio" name="bio" rows="4" maxlength="500" placeholder="Présentez-vous en quelques lignes (parcours, expertise, ce que vous cherchez sur MVPForge)...">{{ (form.get('bio') if form else db_user.bio) or '' }}</textarea>
+      <span class="form-hint">500 caractères maximum</span>
+    </div>
+
+    {% if db_user.auth_provider == 'local' %}
+    <div class="account-form-divider">
+      <h3>Confirmation</h3>
+      <p class="form-hint">Requis si vous modifiez votre adresse e-mail.</p>
+      <div class="form-group">
+        <label for="current_password">Mot de passe actuel</label>
+        <input type="password" id="current_password" name="current_password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="account-form-actions">
+      <button type="submit" class="btn btn-primary">Enregistrer le profil</button>
+      <a href="{{ url_for('account.dashboard') }}" class="btn btn-ghost">Annuler</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

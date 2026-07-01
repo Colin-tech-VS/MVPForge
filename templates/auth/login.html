@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion — MVPForge{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card reveal visible">
+    <div class="auth-card-head">
+      <a href="{{ url_for('site.home') }}" class="logo logo-center">
+        <span class="logo-icon">
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="8" fill="currentColor"/>
+            <path d="M8 18L14 8L20 18" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 18H18" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </a>
+      <h1>Connexion</h1>
+      <p>Accédez à votre compte MVPForge</p>
+    </div>
+
+    <form class="auth-form" method="post" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="vous@exemple.com"
+          autocomplete="email"
+          required
+          value="{{ request.form.get('email', '') }}"
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+      <div class="form-row">
+        <label class="checkbox-label">
+          <input type="checkbox" name="remember">
+          <span>Se souvenir de moi</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+    </form>
+
+    <p class="auth-switch">
+      Pas encore de compte ?
+      <a href="{{ url_for('auth.register') }}">Créer un compte</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

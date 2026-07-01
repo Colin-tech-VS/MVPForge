@@ -1,0 +1,49 @@
+{% extends "account/base.html" %}
+
+{% block title %}Mes achats — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Mes achats</h2>
+      <p class="section-desc">{{ purchases|length }} achat{{ 's' if purchases|length != 1 else '' }}</p>
+    </div>
+    <a href="{{ url_for('site.catalogue') }}" class="btn btn-outline btn-sm">Explorer le catalogue</a>
+  </div>
+
+  {% if purchases %}
+  <div class="purchase-list">
+    {% for purchase in purchases %}
+    <article class="purchase-card">
+      <div class="purchase-card-main">
+        <span class="mvp-category">{{ purchase.project.category }}</span>
+        <h3>{{ purchase.project.title }}</h3>
+        <p>{{ purchase.project.tagline }}</p>
+        <p class="purchase-card-meta">
+          {{ purchase.formatted_amount() }} € ·
+          <span class="status-badge status-{{ purchase.status }}">{{ purchase.status_label() }}</span>
+          {% if purchase.paid_at %}
+          · {{ purchase.paid_at.strftime('%d/%m/%Y') }}
+          {% endif %}
+        </p>
+      </div>
+      <div class="purchase-card-actions">
+        {% if purchase.is_paid() %}
+        <a href="{{ url_for('site.project_detail', project_id=purchase.project_id) }}" class="btn btn-ghost btn-sm">Voir la fiche</a>
+        {% else %}
+        <a href="{{ url_for('purchases.purchase_checkout', purchase_id=purchase.id) }}" class="btn btn-primary btn-sm">Finaliser le paiement</a>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-card empty-card-lg">
+    <h3>Aucun achat pour l'instant</h3>
+    <p>Parcourez le catalogue et acquérez un MVP prêt à reprendre.</p>
+    <a href="{{ url_for('site.catalogue') }}" class="btn btn-primary">Voir le catalogue</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

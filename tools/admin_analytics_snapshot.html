@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440">
+  <title>Analytics · Admin</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --panel: #171717;
+      --border: #2a2a2a;
+      --text: #f5f5f5;
+      --muted: #9a9a9a;
+      --gold: #c9a962;
+      --accent: #c9a962;
+      --success: #3d8f6e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 28px 32px 40px;
+      width: 1440px;
+      min-height: 900px;
+    }
+    .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    h1 { font-size: 34px; font-weight: 600; margin-bottom: 8px; }
+    h1 .accent { color: var(--gold); }
+    .muted { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .hero { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; padding: 20px 22px; border: 1px solid var(--border); background: #121212; }
+    .period { display: flex; gap: 6px; }
+    .period a { color: var(--muted); text-decoration: none; padding: 8px 14px; border: 1px solid var(--border); font-size: 13px; }
+    .period a.active { color: var(--text); border-color: var(--gold); background: rgba(201,169,98,.08); }
+    .panel { border: 1px solid var(--border); background: var(--panel); padding: 18px 20px; margin-bottom: 18px; }
+    .panel h2 { font-size: 16px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .rt-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 4px rgba(74,222,128,.15); }
+    .rt-grid { display: grid; grid-template-columns: 180px 180px 1fr; gap: 14px; margin-top: 14px; }
+    .rt-card { background: #111; border: 1px solid var(--border); padding: 16px; }
+    .rt-card-major .rt-num { color: var(--gold); }
+    .rt-num { font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+    .rt-label { font-size: 12px; color: var(--muted); }
+    .rt-recent { background: #111; border: 1px solid var(--border); padding: 14px 16px; }
+    .rt-recent-title { font-size: 12px; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .06em; }
+    .rt-event { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; padding: 7px 0; border-bottom: 1px solid #222; font-size: 12px; align-items: center; }
+    .rt-event code { color: #ddd; font-size: 11px; }
+    .rt-badge { font-size: 10px; color: var(--muted); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+    .kpi-card { border: 1px solid var(--border); background: var(--panel); padding: 16px 18px; }
+    .kpi-card strong { display: block; font-size: 28px; margin-top: 8px; }
+    .kpi-label { font-size: 12px; color: var(--muted); }
+    .kpi-big { font-size: 30px; font-weight: 700; color: var(--gold); margin-top: 6px; }
+    .split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #222; }
+    th { color: var(--muted); font-weight: 500; }
+    .bar-list { display: grid; gap: 8px; margin-top: 10px; }
+    .bar-row { display: grid; grid-template-columns: 90px 1fr 50px; gap: 10px; align-items: center; font-size: 12px; }
+    .bar-track { height: 8px; background: #222; border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #8b7340, var(--gold)); border-radius: 99px; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Admin · Data</p>
+      <h1>Analytics <span class="accent">détaillées</span></h1>
+      <p class="muted">Vue consolidée du trafic, des sessions, de la technologie et des conversions — 30 jours.</p>
+    </div>
+    <nav class="period"><a>7 j</a><a class="active">30 j</a><a>90 j</a></nav>
+  </header>
+
+  <section class="panel">
+    <h2><span class="rt-dot"></span> Real-time</h2>
+    <p class="muted">Live · toutes pages publiques · robots de preview exclus</p>
+    <div class="rt-grid">
+      <div class="rt-card rt-card-major"><p class="rt-num">5</p><p class="rt-label">Visiteurs actifs (5 min)</p></div>
+      <div class="rt-card"><p class="rt-num">24</p><p class="rt-label">Visiteurs actifs (30 min)</p></div>
+      <div class="rt-recent">
+        <p class="rt-recent-title">10 dernières vues</p>
+        <div class="rt-event"><code>/marketplace</code><span class="rt-badge">google/organic</span><span class="muted">20:21</span></div>
+        <div class="rt-event"><code>/galeries</code><span class="rt-badge">artworksdigital.fr</span><span class="muted">20:21</span></div>
+        <div class="rt-event"><code>/blog/comment-se-faire-connaitre...</code><span class="rt-badge">—</span><span class="muted">20:22</span></div>
+        <div class="rt-event"><code>/portfolio/mitsuaki-ganedo/oeuvre/361</code><span class="rt-badge">—</span><span class="muted">20:16</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="kpi-grid">
+    <article class="kpi-card"><p class="kpi-label">Pages vues (30 j)</p><p class="kpi-big">101 079</p></article>
+    <article class="kpi-card"><p class="kpi-label">Visiteurs uniques</p><p class="kpi-big">20 724</p></article>
+    <article class="kpi-card"><p class="kpi-label">Sessions</p><p class="kpi-big">42 768</p></article>
+    <article class="kpi-card"><p class="kpi-label">Durée moyenne</p><p class="kpi-big">4m 33s</p></article>
+  </div>
+
+  <div class="split">
+    <section class="panel">
+      <h2>Canaux d'acquisition</h2>
+      <div class="bar-list">
+        <div class="bar-row"><span>Direct</span><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div><span>19 484</span></div>
+        <div class="bar-row"><span>Referral</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span>5 701</span></div>
+        <div class="bar-row"><span>UTM</span><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><span>648</span></div>
+        <div class="bar-row"><span>Search</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span>33</span></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Pages les plus vues</h2>
+      <table>
+        <thead><tr><th>Page</th><th>Vues</th><th>Visiteurs</th></tr></thead>
+        <tbody>
+          <tr><td>/</td><td>3 047</td><td>1 816</td></tr>
+          <tr><td>/portfolio/antoine-marelle</td><td>1 955</td><td>725</td></tr>
+          <tr><td>/portfolio/florence-de-martino</td><td>1 130</td><td>480</td></tr>
+          <tr><td>/artistes</td><td>910</td><td>480</td></tr>
+          <tr><td>/galeries</td><td>652</td><td>601</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

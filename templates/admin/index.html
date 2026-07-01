@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Administration — MVPForge{% endblock %}
+{% block body_class %}admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-placeholder">
+  <div class="container admin-placeholder-inner">
+    <p class="hero-label">Administration</p>
+    <h1 class="page-title">Dashboard admin</h1>
+    <p class="page-subtitle">Espace réservé à la gestion de la plateforme. Cette section sera développée prochainement.</p>
+    <div class="admin-placeholder-links">
+      <a href="{{ url_for('site.home') }}" class="btn btn-ghost">← Retour au site</a>
+      <a href="{{ url_for('account.dashboard') }}" class="btn btn-primary">Espace vendeur</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}{% endblock %}
