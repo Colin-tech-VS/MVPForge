@@ -24,21 +24,23 @@
         </span>
         <span class="logo-text">MVPForge</span>
       </a>
-      <div class="nav-links">
-        <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
-        <a href="{{ url_for('site.categories') }}">Catégories</a>
-        <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+      <div class="nav-menu" id="nav-menu">
+        <div class="nav-links">
+          <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
+          <a href="{{ url_for('site.categories') }}">Catégories</a>
+          <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+        </div>
+        <div class="nav-actions">
+          {% if current_user %}
+            <a href="{{ url_for('account.dashboard') }}" class="nav-link">Mon compte</a>
+            <a href="{{ url_for('account.create_project') }}" class="btn btn-primary">Vendre un MVP</a>
+          {% else %}
+            <a href="{{ url_for('auth.login') }}" class="nav-link">Connexion</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Inscription</a>
+          {% endif %}
+        </div>
       </div>
-      <div class="nav-actions">
-        {% if current_user %}
-          <a href="{{ url_for('account.dashboard') }}" class="nav-link">Mon compte</a>
-          <a href="{{ url_for('account.create_project') }}" class="btn btn-primary">Vendre un MVP</a>
-        {% else %}
-          <a href="{{ url_for('auth.login') }}" class="nav-link">Connexion</a>
-          <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Inscription</a>
-        {% endif %}
-      </div>
-      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false">
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-controls="nav-menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </nav>

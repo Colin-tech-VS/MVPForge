@@ -7,13 +7,27 @@
     header?.classList.toggle('scrolled', window.scrollY > 8);
   }, { passive: true });
 
+  function closeNav() {
+    if (!nav?.classList.contains('open')) return;
+    nav.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+  }
+
   navToggle?.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(isOpen));
   });
 
-  document.querySelectorAll('.nav-links a').forEach((link) => {
-    link.addEventListener('click', () => nav.classList.remove('open'));
+  document.querySelectorAll('.nav-menu a').forEach((link) => {
+    link.addEventListener('click', closeNav);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeNav();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (nav?.classList.contains('open') && !nav.contains(e.target)) closeNav();
   });
 
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
