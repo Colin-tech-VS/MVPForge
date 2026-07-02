@@ -55,6 +55,21 @@ PURCHASE_COLUMNS = {
 }
 
 
+HANDOVER_COLUMNS = {
+    "repo_url": "VARCHAR(500)",
+    "deploy_notes": "TEXT",
+    "domains": "TEXT",
+    "accounts": "TEXT",
+    "data_notes": "TEXT",
+    "analytics_access": "TEXT",
+    "legal_notes": "TEXT",
+    "secrets_enc": "TEXT",
+    "github_token_enc": "TEXT",
+    "created_at": "DATETIME",
+    "updated_at": "DATETIME",
+}
+
+
 def _column_type(sqlite_type: str) -> str:
     if db.engine.dialect.name != "postgresql":
         return sqlite_type
@@ -98,6 +113,17 @@ def upgrade_database() -> None:
                 db.session.execute(
                     text(
                         f"ALTER TABLE mvp_purchases ADD COLUMN {col} {_column_type(col_type)}"
+                    )
+                )
+        db.session.commit()
+
+    if "mvp_handovers" in tables:
+        existing = {c["name"] for c in inspector.get_columns("mvp_handovers")}
+        for col, col_type in HANDOVER_COLUMNS.items():
+            if col not in existing:
+                db.session.execute(
+                    text(
+                        f"ALTER TABLE mvp_handovers ADD COLUMN {col} {_column_type(col_type)}"
                     )
                 )
         db.session.commit()
