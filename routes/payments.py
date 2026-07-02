@@ -44,6 +44,10 @@ def stripe_webhook():
         elif kind == "project_purchase":
             purchase = MvpPurchase.query.get(meta.get("purchase_id"))
             if purchase:
-                fulfill_project_purchase(purchase, session_id=session.get("id"))
+                fulfill_project_purchase(
+                    purchase,
+                    session_id=session.get("id"),
+                    payment_intent=session.get("payment_intent"),
+                )
 
     return jsonify({"ok": True}), 200

@@ -30,7 +30,9 @@
     </div>
     <nav class="account-nav-links">
       <a href="{{ url_for('account.dashboard') }}" class="account-nav-link{% if account_section == 'projects' %} is-active{% endif %}">Mes projets</a>
+      <a href="{{ url_for('account.sales') }}" class="account-nav-link{% if account_section == 'sales' %} is-active{% endif %}">Mes ventes</a>
       <a href="{{ url_for('account.purchases') }}" class="account-nav-link{% if account_section == 'purchases' %} is-active{% endif %}">Mes achats</a>
+      <a href="{{ url_for('account.payouts') }}" class="account-nav-link{% if account_section == 'payouts' %} is-active{% endif %}">Paiements</a>
       <a href="{{ url_for('account.profile') }}" class="account-nav-link{% if account_section == 'profile' %} is-active{% endif %}">Profil & coordonnées</a>
       <a href="{{ url_for('account.security') }}" class="account-nav-link{% if account_section == 'security' %} is-active{% endif %}">Mot de passe & sécurité</a>
     </nav>

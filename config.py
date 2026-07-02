@@ -38,3 +38,13 @@ class Config:
     STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
     STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
     STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
+    # E-mails transactionnels (SMTP). Inactif tant que non configuré.
+    SMTP_HOST = os.environ.get("SMTP_HOST", "")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+    SMTP_USER = os.environ.get("SMTP_USER", "")
+    SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+    EMAIL_FROM = os.environ.get("EMAIL_FROM", "")
+
+    # Clé de chiffrement des données de passation (défaut : dérivée de SECRET_KEY).
+    HANDOVER_KEY = os.environ.get("HANDOVER_KEY", "")

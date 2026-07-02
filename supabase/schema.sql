@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255),
     external_id VARCHAR(255) UNIQUE,
     auth_provider VARCHAR(20) NOT NULL DEFAULT 'local',
+    stripe_account_id VARCHAR(255),
+    stripe_onboarded BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
@@ -85,6 +87,12 @@ CREATE TABLE IF NOT EXISTS mvp_purchases (
     amount_cents INTEGER NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     stripe_checkout_session_id VARCHAR(255),
+    platform_fee_cents INTEGER,
+    seller_amount_cents INTEGER,
+    stripe_payment_intent_id VARCHAR(255),
+    stripe_transfer_id VARCHAR(255),
+    buyer_confirmed_at TIMESTAMP WITH TIME ZONE,
+    released_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     paid_at TIMESTAMP WITH TIME ZONE
 );
@@ -92,3 +100,21 @@ CREATE TABLE IF NOT EXISTS mvp_purchases (
 CREATE INDEX IF NOT EXISTS ix_mvp_purchases_project_id ON mvp_purchases (project_id);
 CREATE INDEX IF NOT EXISTS ix_mvp_purchases_buyer_id ON mvp_purchases (buyer_id);
 CREATE INDEX IF NOT EXISTS ix_mvp_purchases_status ON mvp_purchases (status);
+
+CREATE TABLE IF NOT EXISTS mvp_handovers (
+    id VARCHAR(36) PRIMARY KEY,
+    project_id VARCHAR(36) NOT NULL UNIQUE REFERENCES mvp_projects (id) ON DELETE CASCADE,
+    repo_url VARCHAR(500),
+    deploy_notes TEXT,
+    domains TEXT,
+    accounts TEXT,
+    data_notes TEXT,
+    analytics_access TEXT,
+    legal_notes TEXT,
+    secrets_enc TEXT,
+    github_token_enc TEXT,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS ix_mvp_handovers_project_id ON mvp_handovers (project_id);

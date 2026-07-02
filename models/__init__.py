@@ -1,5 +1,6 @@
+from models.handover import ProjectHandover
 from models.mvp import MvpImage, MvpProject
 from models.purchase import MvpPurchase
 from models.user import User
 
-__all__ = ["User", "MvpProject", "MvpImage", "MvpPurchase"]
+__all__ = ["User", "MvpProject", "MvpImage", "MvpPurchase", "ProjectHandover"]

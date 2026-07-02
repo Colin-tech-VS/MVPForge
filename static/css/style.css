@@ -2224,3 +2224,44 @@ button {
   }
 }
 
+
+/* ── Passation / handover ─────────────────────────────────────────── */
+.status-released { background: #DCFCE7; color: #166534; }
+
+.handover-section {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  margin-top: 1rem;
+  background: #fff;
+}
+.handover-section h3 { margin: 0 0 .5rem; font-size: 1rem; }
+.handover-pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: .75rem;
+  font-size: .85rem;
+  margin: 0;
+}
+.handover-checklist { margin: .5rem 0 0; padding-left: 1.1rem; line-height: 1.7; }
+.handover-form .form-group { margin-bottom: 1rem; }
+.handover-form label { display: block; font-weight: 600; margin-bottom: .35rem; font-size: .9rem; }
+.handover-form input,
+.handover-form textarea {
+  width: 100%;
+  padding: .6rem .75rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font: inherit;
+}
+.handover-inline-form { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+.handover-inline-form input {
+  flex: 1 1 220px;
+  padding: .6rem .75rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font: inherit;
+}
+.handover-confirm { border-color: var(--accent, #1A6B52); }

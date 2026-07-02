@@ -2,14 +2,19 @@ from flask import Blueprint, abort, current_app, flash, redirect, render_templat
 
 from auth.decorators import login_required
 from auth.local_provider import get_current_user
-from constants import PROJECT_STATUS_PUBLISHED, PROJECT_STATUS_SOLD
+from constants import HANDOVER_STEPS, PROJECT_STATUS_PUBLISHED, PROJECT_STATUS_SOLD
 from extensions import db
 from models.mvp import MvpProject
 from models.purchase import MvpPurchase
 from models.user import User
-from utils.purchase_payment import fulfill_project_purchase, get_or_create_pending_purchase
+from utils.purchase_payment import (
+    confirm_and_release,
+    fulfill_project_purchase,
+    get_or_create_pending_purchase,
+)
 from utils.stripe_checkout import (
     create_purchase_checkout_session,
+    retrieve_checkout_session,
     session_paid_for_purchase,
     stripe_enabled,
 )
@@ -69,7 +74,7 @@ def purchase_checkout(purchase_id):
                 f"Achat confirmé — « {project.title} » (paiement simulé · mode dev).",
                 "success",
             )
-            return redirect(url_for("account.purchases"))
+            return redirect(url_for("purchases.handover", purchase_id=purchase.id))
 
         if not stripe_enabled():
             flash("Le paiement en ligne n'est pas encore configuré.", "error")
@@ -101,19 +106,62 @@ def purchase_success(purchase_id):
     session_id = request.args.get("session_id", "").strip()
 
     if purchase.is_paid():
-        flash("Votre achat est confirmé.", "success")
-        return redirect(url_for("account.purchases"))
+        return redirect(url_for("purchases.handover", purchase_id=purchase.id))
 
     if stripe_enabled():
         if not session_id or not session_paid_for_purchase(session_id, purchase.id):
             flash("Paiement non confirmé. Réessayez ou contactez le support.", "error")
             return redirect(url_for("purchases.purchase_checkout", purchase_id=purchase.id))
-        fulfill_project_purchase(purchase, session_id=session_id)
+        data = retrieve_checkout_session(session_id) or {}
+        fulfill_project_purchase(
+            purchase,
+            session_id=session_id,
+            payment_intent=data.get("payment_intent"),
+        )
     else:
         abort(404)
 
     flash(
-        f"Paiement reçu — le vendeur vous contactera pour le transfert de « {purchase.project.title} ».",
+        f"Paiement reçu — accédez au dossier de passation de « {purchase.project.title} ».",
         "success",
     )
-    return redirect(url_for("account.purchases"))
+    return redirect(url_for("purchases.handover", purchase_id=purchase.id))
+
+
+@purchases_bp.route("/achat/<purchase_id>/passation")
+@login_required
+def handover(purchase_id):
+    db_user = _get_db_user()
+    purchase = MvpPurchase.query.filter_by(id=purchase_id, buyer_id=db_user.id).first_or_404()
+    if not purchase.is_paid():
+        flash("Cet achat n'est pas encore finalisé.", "error")
+        return redirect(url_for("purchases.purchase_checkout", purchase_id=purchase.id))
+
+    project = purchase.project
+    return render_template(
+        "site/handover.html",
+        purchase=purchase,
+        project=project,
+        handover=project.handover,
+        seller=project.seller,
+        steps=HANDOVER_STEPS,
+    )
+
+
+@purchases_bp.route("/achat/<purchase_id>/confirmer", methods=["POST"])
+@login_required
+def confirm_receipt(purchase_id):
+    db_user = _get_db_user()
+    purchase = MvpPurchase.query.filter_by(id=purchase_id, buyer_id=db_user.id).first_or_404()
+    if not purchase.is_paid():
+        abort(404)
+
+    released = confirm_and_release(purchase)
+    if released:
+        flash("Réception confirmée — le vendeur a été payé. Merci !", "success")
+    else:
+        flash(
+            "Réception confirmée. Le reversement au vendeur sera finalisé sous peu.",
+            "success",
+        )
+    return redirect(url_for("purchases.handover", purchase_id=purchase.id))

@@ -35,6 +35,7 @@ def retrieve_checkout_session(session_id: str) -> dict | None:
     return {
         "id": session.id,
         "payment_status": session.payment_status,
+        "payment_intent": session.payment_intent,
         "metadata": dict(session.metadata or {}),
     }
 
