@@ -29,6 +29,12 @@ class Config:
     SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
     SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 
+    # Supabase Storage (persistance des images uploadées).
+    # Actif dès que SUPABASE_URL + SUPABASE_SERVICE_KEY sont définis.
+    # Sinon, fallback disque local (instance/uploads/, éphémère sur Scalingo).
+    SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+    SUPABASE_STORAGE_BUCKET = os.environ.get("SUPABASE_STORAGE_BUCKET", "mvp-images")
+
     STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
     STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
     STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")

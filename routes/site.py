@@ -96,12 +96,20 @@ def how_it_works():
 @site_bp.route("/uploads/<project_id>/<filename>")
 def serve_upload(project_id, filename):
     from pathlib import Path
-    from flask import current_app
+    from flask import current_app, redirect
 
+    from utils.supabase_storage import public_url, storage_enabled
+
+    # Images présentes localement (seed, ou dev) : servies directement.
     folder = Path(current_app.instance_path) / "uploads" / project_id
-    if not folder.exists() or not (folder / filename).exists():
-        abort(404)
-    return send_from_directory(folder, filename)
+    if folder.exists() and (folder / filename).exists():
+        return send_from_directory(folder, filename)
+
+    # Sinon (uploads utilisateurs en prod) : redirection vers Supabase Storage.
+    if storage_enabled():
+        return redirect(public_url(f"{project_id}/{filename}"), code=302)
+
+    abort(404)
 
 
 @site_bp.route("/api/mvps")
