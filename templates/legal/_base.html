@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} — {{ site_name }}{% endblock %}
+{% block description %}{{ page_title }} de {{ site_name }}, la marketplace de projets MVP prêts à lancer.{% endblock %}
+{% block meta_robots %}index, follow{% endblock %}
+{% block body_class %}legal-page{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="eyebrow">Informations légales</p>
+    <h1 class="page-title">{{ page_title }}</h1>
+    <p class="page-subtitle">Dernière mise à jour&nbsp;: {{ last_updated }}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <article class="legal-content">
+      {% block legal_body %}{% endblock %}
+    </article>
+
+    <nav class="legal-nav" aria-label="Autres documents légaux">
+      <a href="{{ url_for('legal.mentions_legales') }}">Mentions légales</a>
+      <a href="{{ url_for('legal.cgv') }}">CGV</a>
+      <a href="{{ url_for('legal.cgu') }}">CGU</a>
+      <a href="{{ url_for('legal.confidentialite') }}">Confidentialité</a>
+      <a href="{{ url_for('legal.cookies') }}">Cookies</a>
+    </nav>
+  </div>
+</section>
+{% endblock %}

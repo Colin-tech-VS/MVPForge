@@ -1,0 +1,56 @@
+{% extends "legal/_base.html" %}
+
+{% block legal_body %}
+<p>
+  La présente politique explique l'utilisation des cookies et traceurs sur le
+  site {{ site_name }}.
+</p>
+
+<h2>1. Qu'est-ce qu'un cookie&nbsp;?</h2>
+<p>
+  Un cookie est un petit fichier texte déposé sur votre terminal lors de la
+  visite d'un site. Il permet notamment de reconnaître votre navigateur et de
+  conserver certaines informations le temps d'une session.
+</p>
+
+<h2>2. Cookies utilisés</h2>
+<ul>
+  <li>
+    <strong>Cookies strictement nécessaires</strong>&nbsp;: indispensables au
+    fonctionnement du site (session de connexion, sécurité, maintien du panier
+    ou du processus d'achat). Ils ne requièrent pas de consentement.
+  </li>
+  <li>
+    <strong>Cookies de paiement</strong>&nbsp;: déposés par Stripe lors d'un
+    achat afin de sécuriser la transaction et prévenir la fraude.
+  </li>
+</ul>
+<p>
+  {{ site_name }} n'utilise pas de cookies publicitaires. Si des cookies de
+  mesure d'audience ou tiers venaient à être ajoutés, votre consentement
+  préalable serait recueilli et cette page mise à jour.
+</p>
+
+<h2>3. Gestion des cookies</h2>
+<p>
+  Vous pouvez à tout moment configurer votre navigateur pour accepter ou refuser
+  les cookies, ou les supprimer. Le refus des cookies strictement nécessaires
+  peut toutefois empêcher certaines fonctionnalités (connexion, achat) de
+  fonctionner correctement. La procédure de gestion est décrite dans l'aide de
+  votre navigateur (Chrome, Firefox, Safari, Edge…).
+</p>
+
+<h2>4. Durée de conservation</h2>
+<p>
+  Les cookies de session expirent à la fermeture du navigateur. Les autres
+  cookies sont conservés pour une durée maximale de 13 mois, conformément aux
+  recommandations de la CNIL.
+</p>
+
+<h2>5. En savoir plus</h2>
+<p>
+  Pour plus d'informations sur le traitement de vos données, consultez notre
+  <a href="{{ url_for('legal.confidentialite') }}">politique de
+  confidentialité</a>.
+</p>
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, jsonify, render_template, send_from_directory
 from sqlalchemy import func
 
-from constants import PROJECT_STATUS_PUBLISHED, PROJECT_STATUS_SOLD
+from constants import FAQ_ITEMS, PROJECT_STATUS_PUBLISHED, PROJECT_STATUS_SOLD
 from extensions import db
 from models.mvp import MvpImage, MvpProject
 
@@ -91,6 +91,11 @@ def categories():
 @site_bp.route("/comment-ca-marche")
 def how_it_works():
     return render_template("site/how_it_works.html")
+
+
+@site_bp.route("/faq")
+def faq():
+    return render_template("site/faq.html", faqs=FAQ_ITEMS)
 
 
 @site_bp.route("/uploads/<project_id>/<filename>")

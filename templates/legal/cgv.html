@@ -1,0 +1,100 @@
+{% extends "legal/_base.html" %}
+
+{% block legal_body %}
+<p>
+  Les présentes conditions générales de vente (ci-après «&nbsp;CGV&nbsp;»)
+  régissent les transactions réalisées sur la plateforme {{ site_name }}, éditée
+  par {{ legal_entity }}, entre un vendeur et un acheteur de projet MVP. Toute
+  transaction implique l'acceptation sans réserve des présentes CGV.
+</p>
+
+<h2>1. Objet</h2>
+<p>
+  {{ site_name }} est une place de marché en ligne permettant à des vendeurs de
+  mettre en vente des projets numériques (MVP) — code source, design, données,
+  noms de domaine, comptes associés — et à des acheteurs de les acquérir.
+  {{ site_name }} agit en qualité d'intermédiaire technique et fournisseur du
+  service de séquestre des paiements&nbsp;; {{ site_name }} n'est ni le vendeur
+  ni l'acheteur des projets.
+</p>
+
+<h2>2. Publication d'une annonce</h2>
+<p>
+  Tout vendeur peut publier une annonce moyennant des frais de publication
+  uniques de <strong>24&nbsp;€ TTC</strong>, réglés via Stripe, que le projet
+  soit en production ou hors ligne. Ces frais couvrent la mise en ligne de la
+  fiche et ne sont pas remboursables une fois l'annonce publiée. Le vendeur
+  garantit qu'il détient l'ensemble des droits nécessaires à la cession du
+  projet.
+</p>
+
+<h2>3. Prix</h2>
+<p>
+  Les prix des projets sont indiqués en euros et fixés librement par les
+  vendeurs. Le prix affiché sur la fiche est celui dû par l'acheteur au moment
+  de l'achat. {{ site_name }} prélève une commission de
+  <strong>10&nbsp;%</strong> sur le prix de vente&nbsp;; le solde est reversé au
+  vendeur après confirmation de la passation.
+</p>
+
+<h2>4. Commande et paiement</h2>
+<p>
+  L'achat s'effectue en ligne via le prestataire de paiement Stripe. Au moment
+  de l'achat, le montant est débité puis <strong>conservé en séquestre
+  (escrow)</strong> par {{ site_name }}. Les fonds ne sont pas immédiatement
+  versés au vendeur.
+</p>
+
+<h2>5. Passation et libération des fonds</h2>
+<p>
+  Après paiement, le vendeur transmet à l'acheteur l'ensemble des éléments du
+  projet&nbsp;: code source, documentation de déploiement, secrets et accès,
+  noms de domaine, comptes tiers, export des données et cession de propriété
+  intellectuelle. Lorsque l'acheteur confirme la bonne réception de ces
+  éléments, le séquestre est libéré et les fonds (déduction faite de la
+  commission) sont reversés au vendeur.
+</p>
+
+<h2>6. Droit de rétractation</h2>
+<p>
+  Les projets vendus constituent des contenus numériques et des biens
+  personnalisés, dont l'exécution commence dès la passation, avec l'accord de
+  l'acheteur. Conformément à l'article L.221-28 du Code de la consommation, le
+  droit de rétractation ne peut s'exercer une fois la passation entamée et les
+  accès transmis. En dehors de ce cas, l'acheteur consommateur dispose des
+  droits prévus par la loi.
+</p>
+
+<h2>7. Litiges entre acheteur et vendeur</h2>
+<p>
+  En cas de désaccord sur la passation (éléments manquants, non-conformité),
+  l'acheteur ne doit pas confirmer la réception et doit contacter
+  {{ site_name }} à l'adresse
+  <a href="mailto:{{ legal_email }}">{{ legal_email }}</a>. {{ site_name }}
+  pourra, selon les circonstances, maintenir le séquestre, faciliter une
+  résolution amiable ou procéder au remboursement de l'acheteur.
+</p>
+
+<h2>8. Responsabilité</h2>
+<p>
+  {{ site_name }} ne garantit pas l'exactitude des informations déclarées par
+  les vendeurs (métriques, revenus, trafic) ni la valeur commerciale des
+  projets. Il appartient à l'acheteur de procéder à ses propres vérifications
+  avant l'achat. La responsabilité de {{ site_name }} se limite à la fourniture
+  du service d'intermédiation et de séquestre.
+</p>
+
+<h2>9. Médiation de la consommation</h2>
+<p>
+  Conformément aux articles L.611-1 et suivants du Code de la consommation, le
+  consommateur peut recourir gratuitement à un médiateur de la consommation en
+  vue de la résolution amiable d'un litige. Les coordonnées du médiateur
+  compétent seront précisées ici.
+</p>
+
+<h2>10. Droit applicable</h2>
+<p>
+  Les présentes CGV sont soumises au droit français. Tout litige relatif à leur
+  interprétation ou à leur exécution relève des tribunaux français compétents.
+</p>
+{% endblock %}

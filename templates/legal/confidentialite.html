@@ -1,0 +1,90 @@
+{% extends "legal/_base.html" %}
+
+{% block legal_body %}
+<p>
+  La présente politique de confidentialité décrit la manière dont
+  {{ site_name }}, éditée par {{ legal_entity }}, collecte et traite les données
+  personnelles de ses utilisateurs, conformément au Règlement général sur la
+  protection des données (RGPD) et à la loi Informatique et Libertés.
+</p>
+
+<h2>1. Responsable du traitement</h2>
+<p>
+  Le responsable du traitement est {{ legal_entity }}. Pour toute question
+  relative à vos données, vous pouvez écrire à
+  <a href="mailto:{{ legal_email }}">{{ legal_email }}</a>.
+</p>
+
+<h2>2. Données collectées</h2>
+<ul>
+  <li><strong>Données de compte</strong>&nbsp;: adresse e-mail, nom d'affichage,
+      mot de passe (stocké de façon chiffrée).</li>
+  <li><strong>Données d'annonce</strong>&nbsp;: informations relatives aux
+      projets publiés.</li>
+  <li><strong>Données de transaction</strong>&nbsp;: historique des achats et
+      ventes. Les données de paiement (numéro de carte) sont traitées
+      directement par Stripe et ne sont pas conservées par {{ site_name }}.</li>
+  <li><strong>Données de passation</strong>&nbsp;: éléments transmis lors d'une
+      vente, chiffrés au repos.</li>
+  <li><strong>Données techniques</strong>&nbsp;: journaux de connexion et
+      données strictement nécessaires au fonctionnement du service.</li>
+</ul>
+
+<h2>3. Finalités et bases légales</h2>
+<ul>
+  <li>Fourniture du service et gestion des comptes — exécution du contrat.</li>
+  <li>Traitement des paiements et du séquestre — exécution du contrat.</li>
+  <li>Communications transactionnelles (e-mails liés à une vente ou un achat) —
+      exécution du contrat.</li>
+  <li>Respect des obligations légales et comptables — obligation légale.</li>
+  <li>Sécurité et prévention de la fraude — intérêt légitime.</li>
+</ul>
+
+<h2>4. Destinataires</h2>
+<p>
+  Les données sont accessibles aux équipes de {{ site_name }} et à ses
+  sous-traitants techniques strictement nécessaires au service&nbsp;: prestataire
+  d'hébergement, Stripe (paiements), fournisseur de base de données et, le cas
+  échéant, service d'envoi d'e-mails. Ces prestataires sont tenus à des
+  obligations de confidentialité et de sécurité.
+</p>
+
+<h2>5. Durée de conservation</h2>
+<p>
+  Les données de compte sont conservées tant que le compte est actif. Les
+  données de transaction sont conservées pour la durée requise par les
+  obligations légales et comptables (jusqu'à 10 ans pour les pièces
+  comptables). Les données sont ensuite supprimées ou anonymisées.
+</p>
+
+<h2>6. Vos droits</h2>
+<p>
+  Conformément au RGPD, vous disposez d'un droit d'accès, de rectification,
+  d'effacement, de limitation, d'opposition et de portabilité de vos données,
+  ainsi que du droit de définir des directives relatives à leur sort après votre
+  décès. Vous pouvez exercer ces droits en écrivant à
+  <a href="mailto:{{ legal_email }}">{{ legal_email }}</a>. Vous disposez
+  également du droit d'introduire une réclamation auprès de la CNIL
+  (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>).
+</p>
+
+<h2>7. Sécurité</h2>
+<p>
+  {{ site_name }} met en œuvre des mesures techniques et organisationnelles
+  appropriées pour protéger vos données&nbsp;: mots de passe chiffrés,
+  chiffrement des données de passation, connexions sécurisées et accès
+  restreint.
+</p>
+
+<h2>8. Cookies</h2>
+<p>
+  L'utilisation des cookies est détaillée dans notre
+  <a href="{{ url_for('legal.cookies') }}">politique de cookies</a>.
+</p>
+
+<h2>9. Modifications</h2>
+<p>
+  La présente politique peut être mise à jour. La version applicable est celle
+  publiée sur cette page à la date de votre visite.
+</p>
+{% endblock %}
