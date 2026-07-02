@@ -53,6 +53,7 @@
           {% elif project.is_catalogue_visible() %}
           <a href="{{ url_for('site.project_detail', project_id=project.id) }}" class="btn btn-ghost btn-sm">Voir la fiche</a>
           {% endif %}
+          <a href="{{ url_for('account.edit_handover', project_id=project.id) }}" class="btn btn-ghost btn-sm">Passation</a>
           <form method="post" action="{{ url_for('account.delete_project', project_id=project.id) }}" onsubmit="return confirm('Supprimer ce projet ?');">
             <button type="submit" class="btn btn-ghost btn-sm">Supprimer</button>
           </form>

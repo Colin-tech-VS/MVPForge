@@ -20,6 +20,10 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=True)
     external_id = db.Column(db.String(255), unique=True, nullable=True, index=True)
     auth_provider = db.Column(db.String(20), nullable=False, default="local")
+
+    # Stripe Connect (compte vendeur pour recevoir les paiements).
+    stripe_account_id = db.Column(db.String(255), nullable=True)
+    stripe_onboarded = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(
         db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
     )
@@ -32,6 +36,9 @@ class User(db.Model):
 
     def display_name(self) -> str:
         return self.name or self.email.split("@")[0]
+
+    def can_receive_payouts(self) -> bool:
+        return bool(self.stripe_account_id and self.stripe_onboarded)
 
     def set_password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)

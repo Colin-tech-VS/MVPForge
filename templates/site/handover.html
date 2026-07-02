@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Passation — {{ project.title }}{% endblock %}
+
+{% block content %}
+<section class="container" style="max-width:840px;padding:2.5rem 1rem">
+  <a href="{{ url_for('account.purchases') }}" class="btn btn-ghost btn-sm">← Mes achats</a>
+  <h1 class="section-title" style="margin-top:1rem">Passation — {{ project.title }}</h1>
+  <p class="section-desc">
+    Achat confirmé ({{ purchase.formatted_amount() }} €) ·
+    <span class="status-badge status-{{ purchase.status }}">{{ purchase.status_label() }}</span>
+  </p>
+
+  {% if handover and handover.is_ready() %}
+    <div class="handover-kit">
+      {% if handover.repo_url %}
+      <div class="handover-section">
+        <h3>Code source</h3>
+        <p><a href="{{ handover.repo_url }}" target="_blank" rel="noopener noreferrer">{{ handover.repo_url }}</a></p>
+      </div>
+      {% endif %}
+      {% if handover.deploy_notes %}
+      <div class="handover-section"><h3>Déploiement</h3><pre class="handover-pre">{{ handover.deploy_notes }}</pre></div>
+      {% endif %}
+      {% if handover.secrets %}
+      <div class="handover-section"><h3>Secrets & accès 🔒</h3><pre class="handover-pre">{{ handover.secrets }}</pre></div>
+      {% endif %}
+      {% if handover.domains %}
+      <div class="handover-section"><h3>Domaines & DNS</h3><pre class="handover-pre">{{ handover.domains }}</pre></div>
+      {% endif %}
+      {% if handover.accounts %}
+      <div class="handover-section"><h3>Comptes tiers</h3><pre class="handover-pre">{{ handover.accounts }}</pre></div>
+      {% endif %}
+      {% if handover.data_notes %}
+      <div class="handover-section"><h3>Données</h3><pre class="handover-pre">{{ handover.data_notes }}</pre></div>
+      {% endif %}
+      {% if handover.analytics_access %}
+      <div class="handover-section"><h3>Analytics</h3><pre class="handover-pre">{{ handover.analytics_access }}</pre></div>
+      {% endif %}
+      {% if handover.legal_notes %}
+      <div class="handover-section"><h3>Juridique</h3><pre class="handover-pre">{{ handover.legal_notes }}</pre></div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="empty-card">
+      <h3>Dossier en préparation</h3>
+      <p>Le vendeur n'a pas encore finalisé le dossier de passation. Contactez-le si besoin : <a href="mailto:{{ seller.email }}">{{ seller.email }}</a>.</p>
+    </div>
+  {% endif %}
+
+  <div class="handover-section">
+    <h3>Checklist de transfert</h3>
+    <ul class="handover-checklist">
+      {% for key, label, desc in steps %}
+      <li><strong>{{ label }}</strong> — {{ desc }}</li>
+      {% endfor %}
+    </ul>
+    <p class="section-desc">Vendeur : <a href="mailto:{{ seller.email }}">{{ seller.email }}</a></p>
+  </div>
+
+  <div class="handover-section handover-confirm">
+    {% if purchase.is_released() %}
+      <p class="status-badge status-released">Vente finalisée ✓</p>
+      <p>Vous avez confirmé la réception. Merci !</p>
+    {% else %}
+      <h3>Tout est bien reçu ?</h3>
+      <p>Confirmez la réception une fois le transfert vérifié : cela libère le paiement vers le vendeur. Action définitive.</p>
+      <form method="post" action="{{ url_for('purchases.confirm_receipt', purchase_id=purchase.id) }}"
+            onsubmit="return confirm('Confirmer la réception ? Le paiement sera versé au vendeur.');">
+        <button type="submit" class="btn btn-primary">Confirmer la réception</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "account/base.html" %}
+
+{% block title %}Paiements — MVPForge{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Paiements & reversements</h2>
+      <p class="section-desc">Recevez vos ventes directement sur votre compte bancaire via Stripe.</p>
+    </div>
+  </div>
+
+  {% if not connect_enabled %}
+    <div class="empty-card">
+      <h3>Paiements bientôt disponibles</h3>
+      <p>Les reversements vendeurs seront activés une fois Stripe configuré sur la plateforme.</p>
+    </div>
+  {% elif onboarded %}
+    <div class="handover-section">
+      <p class="status-badge status-released">Compte vérifié ✓</p>
+      <p>Votre compte Stripe est prêt à recevoir des paiements. Les fonds d'une vente vous sont reversés dès que l'acheteur confirme la réception de la passation.</p>
+    </div>
+  {% else %}
+    <div class="handover-section">
+      <h3>Configurez votre compte Stripe</h3>
+      <p>Pour vendre et être payé, connectez (ou créez) votre compte Stripe. Cela prend quelques minutes.</p>
+      <form method="post" action="{{ url_for('account.payouts_connect') }}">
+        <button type="submit" class="btn btn-primary">Configurer mes paiements</button>
+      </form>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -23,15 +23,24 @@ from constants import (
     PROJECT_STATUS_PENDING_PAYMENT,
     PROJECT_STATUS_PUBLISHED,
 )
+from constants import HANDOVER_STEPS, PROJECT_STATUS_SOLD
 from extensions import db
+from models.handover import ProjectHandover
 from models.mvp import MvpImage, MvpProject
+from models.purchase import MvpPurchase
 from models.user import User
+from utils.github_transfer import github_transfer_available, transfer_repo
 from utils.listing_fee import is_listing_fee_exempt, listing_fee_label, listing_fee_required
 from utils.listing_payment import fulfill_listing_payment
 from utils.stripe_checkout import (
     create_listing_checkout_session,
     session_paid_for_listing,
     stripe_enabled,
+)
+from utils.stripe_connect import (
+    connect_enabled,
+    create_account_link,
+    refresh_account_status,
 )
 from utils.uploads import delete_project_images, save_project_images
 
@@ -445,6 +454,125 @@ def purchases():
         purchases=purchases_list,
         account_section="purchases",
     )
+
+
+# ── Vendeur : paiements (Stripe Connect) & ventes ──────────────────────────
+
+@account_bp.route("/paiements")
+@login_required
+def payouts():
+    db_user = _get_db_user()
+    if db_user.stripe_account_id and connect_enabled():
+        refresh_account_status(db_user)
+    return render_template(
+        "account/payouts.html",
+        db_user=db_user,
+        account_section="payouts",
+        connect_enabled=connect_enabled(),
+        onboarded=db_user.can_receive_payouts(),
+    )
+
+
+@account_bp.route("/paiements/connect", methods=["POST"])
+@login_required
+def payouts_connect():
+    db_user = _get_db_user()
+    if not connect_enabled():
+        flash("Les paiements ne sont pas encore activés sur la plateforme.", "error")
+        return redirect(url_for("account.payouts"))
+    try:
+        url = create_account_link(
+            db_user,
+            refresh_url=url_for("account.payouts", _external=True),
+            return_url=url_for("account.payouts", _external=True),
+        )
+    except Exception:
+        flash("Impossible de démarrer la configuration Stripe. Réessayez.", "error")
+        return redirect(url_for("account.payouts"))
+    return redirect(url)
+
+
+@account_bp.route("/ventes")
+@login_required
+def sales():
+    db_user = _get_db_user()
+    sold_projects = (
+        MvpProject.query.filter_by(user_id=db_user.id, status=PROJECT_STATUS_SOLD)
+        .order_by(MvpProject.sold_at.desc())
+        .all()
+    )
+    rows = []
+    for project in sold_projects:
+        purchase = (
+            MvpPurchase.query.filter_by(project_id=project.id, status="released").first()
+            or MvpPurchase.query.filter_by(project_id=project.id, status="paid").first()
+        )
+        rows.append({"project": project, "purchase": purchase})
+    return render_template(
+        "account/sales.html",
+        db_user=db_user,
+        rows=rows,
+        account_section="sales",
+        onboarded=db_user.can_receive_payouts(),
+        connect_enabled=connect_enabled(),
+    )
+
+
+# ── Vendeur : dossier de passation ─────────────────────────────────────────
+
+@account_bp.route("/projet/<project_id>/passation", methods=["GET", "POST"])
+@login_required
+def edit_handover(project_id):
+    db_user = _get_db_user()
+    project = MvpProject.query.filter_by(id=project_id, user_id=db_user.id).first_or_404()
+    handover = project.handover or ProjectHandover(project_id=project.id)
+
+    if request.method == "POST":
+        handover.repo_url = request.form.get("repo_url", "").strip() or None
+        handover.deploy_notes = request.form.get("deploy_notes", "").strip() or None
+        handover.domains = request.form.get("domains", "").strip() or None
+        handover.accounts = request.form.get("accounts", "").strip() or None
+        handover.data_notes = request.form.get("data_notes", "").strip() or None
+        handover.analytics_access = request.form.get("analytics_access", "").strip() or None
+        handover.legal_notes = request.form.get("legal_notes", "").strip() or None
+        handover.secrets = request.form.get("secrets", "").strip() or None
+        token = request.form.get("github_token", "").strip()
+        if token:
+            handover.github_token = token
+        if not handover.id or handover not in db.session:
+            db.session.add(handover)
+        db.session.commit()
+        flash("Dossier de passation enregistré.", "success")
+        return redirect(url_for("account.edit_handover", project_id=project.id))
+
+    return render_template(
+        "account/handover_edit.html",
+        db_user=db_user,
+        project=project,
+        handover=handover,
+        steps=HANDOVER_STEPS,
+        account_section="projects",
+    )
+
+
+@account_bp.route("/projet/<project_id>/transfert-github", methods=["POST"])
+@login_required
+def transfer_github(project_id):
+    db_user = _get_db_user()
+    project = MvpProject.query.filter_by(id=project_id, user_id=db_user.id).first_or_404()
+    handover = project.handover
+    if not handover or not handover.repo_url or not handover.github_token:
+        flash("Renseignez l'URL du dépôt et un token GitHub dans la passation.", "error")
+        return redirect(url_for("account.edit_handover", project_id=project.id))
+
+    new_owner = request.form.get("new_owner", "").strip()
+    if not new_owner:
+        flash("Indiquez le compte GitHub de l'acheteur (nouveau propriétaire).", "error")
+        return redirect(url_for("account.edit_handover", project_id=project.id))
+
+    ok, message = transfer_repo(handover.repo_url, new_owner, handover.github_token)
+    flash(message, "success" if ok else "error")
+    return redirect(url_for("account.edit_handover", project_id=project.id))
 
 
 @account_bp.route("/projet/nouveau", methods=["GET", "POST"])

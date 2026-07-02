@@ -1,0 +1,66 @@
+{% extends "account/base.html" %}
+
+{% block title %}Passation — {{ project.title }}{% endblock %}
+
+{% block account_content %}
+<section class="account-panel">
+  <div class="account-panel-head">
+    <div>
+      <h2 class="section-title">Dossier de passation</h2>
+      <p class="section-desc">{{ project.title }} — débloqué à l'acheteur après paiement. Les secrets sont chiffrés.</p>
+    </div>
+    <a href="{{ url_for('site.project_detail', project_id=project.id) }}" class="btn btn-outline btn-sm">Voir la fiche</a>
+  </div>
+
+  <form method="post" class="handover-form">
+    <div class="form-group">
+      <label for="repo_url">Dépôt de code (URL)</label>
+      <input type="url" id="repo_url" name="repo_url" value="{{ handover.repo_url or '' }}" placeholder="https://github.com/vous/projet">
+    </div>
+    <div class="form-group">
+      <label for="deploy_notes">Déploiement / runbook</label>
+      <textarea id="deploy_notes" name="deploy_notes" rows="4" placeholder="Étapes de déploiement, dépendances, commandes…">{{ handover.deploy_notes or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="secrets">Secrets & accès (chiffrés) 🔒</label>
+      <textarea id="secrets" name="secrets" rows="4" placeholder="Clés API, variables d'environnement, identifiants…">{{ handover.secrets or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="domains">Domaines & DNS</label>
+      <textarea id="domains" name="domains" rows="2">{{ handover.domains or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="accounts">Comptes tiers (hébergeur, analytics, e-mailing…)</label>
+      <textarea id="accounts" name="accounts" rows="2">{{ handover.accounts or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="data_notes">Données (export base, RGPD)</label>
+      <textarea id="data_notes" name="data_notes" rows="2">{{ handover.data_notes or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="analytics_access">Analytics (accès / export)</label>
+      <textarea id="analytics_access" name="analytics_access" rows="2">{{ handover.analytics_access or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="legal_notes">Juridique (cession de PI, passif)</label>
+      <textarea id="legal_notes" name="legal_notes" rows="2">{{ handover.legal_notes or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="github_token">Token GitHub (pour le transfert auto, chiffré) 🔒</label>
+      <input type="password" id="github_token" name="github_token" placeholder="{{ 'enregistré — laisser vide pour conserver' if handover.github_token_enc else 'ghp_… (scope repo, optionnel)' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer la passation</button>
+  </form>
+
+  {% if handover.repo_url and handover.github_token_enc %}
+  <div class="handover-section" style="margin-top:1.5rem">
+    <h3>Transfert automatique du dépôt GitHub</h3>
+    <p>Indiquez le compte GitHub de l'acheteur pour transférer la propriété du dépôt <strong>{{ handover.repo_url }}</strong>.</p>
+    <form method="post" action="{{ url_for('account.transfer_github', project_id=project.id) }}" class="handover-inline-form">
+      <input type="text" name="new_owner" placeholder="compte-github-acheteur" required>
+      <button type="submit" class="btn btn-outline">Transférer le dépôt</button>
+    </form>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -40,6 +40,18 @@ USER_COLUMNS = {
     "location": "VARCHAR(120)",
     "bio": "TEXT",
     "updated_at": "DATETIME",
+    "stripe_account_id": "VARCHAR(255)",
+    "stripe_onboarded": "BOOLEAN DEFAULT 0",
+}
+
+
+PURCHASE_COLUMNS = {
+    "platform_fee_cents": "INTEGER",
+    "seller_amount_cents": "INTEGER",
+    "stripe_payment_intent_id": "VARCHAR(255)",
+    "stripe_transfer_id": "VARCHAR(255)",
+    "buyer_confirmed_at": "DATETIME",
+    "released_at": "DATETIME",
 }
 
 
@@ -75,6 +87,17 @@ def upgrade_database() -> None:
                 db.session.execute(
                     text(
                         f"ALTER TABLE mvp_projects ADD COLUMN {col} {_column_type(col_type)}"
+                    )
+                )
+        db.session.commit()
+
+    if "mvp_purchases" in tables:
+        existing = {c["name"] for c in inspector.get_columns("mvp_purchases")}
+        for col, col_type in PURCHASE_COLUMNS.items():
+            if col not in existing:
+                db.session.execute(
+                    text(
+                        f"ALTER TABLE mvp_purchases ADD COLUMN {col} {_column_type(col_type)}"
                     )
                 )
         db.session.commit()

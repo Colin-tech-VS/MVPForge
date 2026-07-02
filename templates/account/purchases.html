@@ -30,6 +30,7 @@
       </div>
       <div class="purchase-card-actions">
         {% if purchase.is_paid() %}
+        <a href="{{ url_for('purchases.handover', purchase_id=purchase.id) }}" class="btn btn-primary btn-sm">Passation</a>
         <a href="{{ url_for('site.project_detail', project_id=purchase.project_id) }}" class="btn btn-ghost btn-sm">Voir la fiche</a>
         {% else %}
         <a href="{{ url_for('purchases.purchase_checkout', purchase_id=purchase.id) }}" class="btn btn-primary btn-sm">Finaliser le paiement</a>
