@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Page introuvable — MVPForge{% endblock %}
+{% block description %}La page que vous cherchez n'existe pas ou a été déplacée.{% endblock %}
+{% block meta_robots %}noindex, follow{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container error-page-inner">
+    <p class="error-code">404</p>
+    <h1 class="error-title">Cette page n'existe pas</h1>
+    <p class="error-text">
+      Le projet ou la page que vous cherchez a peut-être été vendu, retiré ou déplacé.
+    </p>
+    <div class="error-actions">
+      <a href="{{ url_for('site.home') }}" class="btn btn-primary">Retour à l'accueil</a>
+      <a href="{{ url_for('site.catalogue') }}" class="btn btn-ghost">Voir le catalogue</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

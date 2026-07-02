@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from flask import Flask
+from flask import Flask, render_template
 
 from config import Config
 from extensions import db
@@ -65,7 +65,40 @@ def create_app(config_class=Config):
             "legal_email": app.config.get("LEGAL_EMAIL", ""),
         }
 
+    register_error_handlers(app)
+
     return app
+
+
+def register_error_handlers(app):
+    """Pages d'erreur propres + garde-fou contre les 500 en cascade.
+
+    Une transaction laissée en échec (ex. coupure DB, timeout Stripe/Supabase)
+    met la session SQLAlchemy dans un état "PendingRollback" : sans rollback,
+    toutes les requêtes suivantes servies par le même worker gunicorn
+    renverraient un 500 — d'où des 500 "intermittents". On annule donc la
+    transaction avant de rendre la page d'erreur.
+    """
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return render_template("errors/404.html"), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        db.session.rollback()
+        return render_template("errors/500.html"), 500
+
+    @app.errorhandler(Exception)
+    def unhandled_exception(error):
+        from werkzeug.exceptions import HTTPException
+
+        # Les erreurs HTTP explicites (404, 403…) gardent leur comportement.
+        if isinstance(error, HTTPException):
+            return error
+        app.logger.exception("Unhandled exception: %s", error)
+        db.session.rollback()
+        return render_template("errors/500.html"), 500
 
 
 app = create_app()

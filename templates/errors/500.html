@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Une erreur est survenue — MVPForge{% endblock %}
+{% block description %}Une erreur inattendue s'est produite. Réessayez dans un instant.{% endblock %}
+{% block meta_robots %}noindex, follow{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container error-page-inner">
+    <p class="error-code">500</p>
+    <h1 class="error-title">Oups, quelque chose a cassé</h1>
+    <p class="error-text">
+      Une erreur inattendue s'est produite de notre côté. Ce n'est pas vous.
+      Réessayez dans quelques instants — si le problème persiste, contactez-nous.
+    </p>
+    <div class="error-actions">
+      <a href="{{ url_for('site.home') }}" class="btn btn-primary">Retour à l'accueil</a>
+      <a href="{{ url_for('legal.mentions_legales') }}" class="btn btn-ghost">Nous contacter</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
