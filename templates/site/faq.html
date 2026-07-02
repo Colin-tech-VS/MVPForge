@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ — Questions fréquentes | {{ site_name }}{% endblock %}
+{% block description %}Achat, vente, séquestre, passation, frais et commission : toutes les réponses pour acheter et vendre un MVP en toute confiance sur {{ site_name }}.{% endblock %}
+{% block body_class %}faq-page{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for question, answer in faqs %}
+    {
+      "@type": "Question",
+      "name": {{ question|tojson }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ answer|tojson }} }
+    }{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <p class="eyebrow">Aide</p>
+    <h1 class="page-title">Questions fréquentes</h1>
+    <p class="page-subtitle">Tout ce qu'il faut savoir avant d'acheter ou de vendre un MVP.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <div class="faq-list">
+      {% for question, answer in faqs %}
+      <details class="faq-item reveal"{% if loop.first %} open{% endif %}>
+        <summary>
+          <span class="faq-question">{{ question }}</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>{{ answer }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+
+    <div class="section-cta">
+      <a href="{{ url_for('site.catalogue') }}" class="btn btn-primary">Explorer le catalogue</a>
+      <a href="{{ url_for('site.how_it_works') }}" class="btn btn-ghost">Comment ça marche</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

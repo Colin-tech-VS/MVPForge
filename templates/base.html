@@ -3,8 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}MVPForge{% endblock %}</title>
-  <meta name="description" content="{% block description %}Marketplace de projets MVP{% endblock %}">
+  <title>{% block title %}MVPForge — Marketplace de projets MVP{% endblock %}</title>
+  <meta name="description" content="{% block description %}Achetez et vendez des projets MVP complets, prêts à déployer. Analytics, documentation et transfert sécurisé inclus.{% endblock %}">
+  <link rel="canonical" href="{% block canonical %}{{ canonical_url }}{% endblock %}">
+  <meta name="robots" content="{% block meta_robots %}index, follow, max-image-preview:large{% endblock %}">
+  <meta name="author" content="{{ site_name }}">
+  <meta name="theme-color" content="#1A6B52">
+
+  {# --- Open Graph --- #}
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="{{ site_name }}">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+  <meta property="og:url" content="{{ self.canonical() }}">
+  {% block og_image %}{% endblock %}
+
+  {# --- Twitter Card --- #}
+  <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
+  <meta name="twitter:title" content="{{ self.og_title() }}">
+  <meta name="twitter:description" content="{{ self.og_description() }}">
+
+  {# --- Données structurées globales (Organization + WebSite) --- #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "{{ site_url }}/#organization",
+        "name": "{{ site_name }}",
+        "url": "{{ site_url }}/",
+        "description": "{{ site_tagline }}"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{ site_url }}/#website",
+        "url": "{{ site_url }}/",
+        "name": "{{ site_name }}",
+        "inLanguage": "fr-FR",
+        "publisher": { "@id": "{{ site_url }}/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "{{ site_url }}{{ url_for('site.catalogue') }}?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
+  {% block structured_data %}{% endblock %}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -29,6 +81,7 @@
           <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
           <a href="{{ url_for('site.categories') }}">Catégories</a>
           <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+          <a href="{{ url_for('site.faq') }}">FAQ</a>
         </div>
         <div class="nav-actions">
           {% if current_user %}
@@ -84,6 +137,7 @@
         <a href="{{ url_for('site.catalogue') }}">Catalogue</a>
         <a href="{{ url_for('site.categories') }}">Catégories</a>
         <a href="{{ url_for('site.how_it_works') }}">Comment ça marche</a>
+        <a href="{{ url_for('site.faq') }}">FAQ</a>
       </div>
       <div class="footer-col">
         <h4>Compte</h4>
@@ -96,9 +150,22 @@
           <a href="{{ url_for('auth.register') }}">Inscription</a>
         {% endif %}
       </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <a href="{{ url_for('legal.mentions_legales') }}">Mentions légales</a>
+        <a href="{{ url_for('legal.cgv') }}">CGV</a>
+        <a href="{{ url_for('legal.cgu') }}">CGU</a>
+        <a href="{{ url_for('legal.confidentialite') }}">Confidentialité</a>
+        <a href="{{ url_for('legal.cookies') }}">Cookies</a>
+      </div>
     </div>
     <div class="container footer-bottom">
-      <span>© 2026 MVPForge. Tous droits réservés.</span>
+      <span>© 2026 {{ site_name }}. Tous droits réservés.</span>
+      <nav class="footer-legal-links" aria-label="Liens légaux">
+        <a href="{{ url_for('legal.mentions_legales') }}">Mentions légales</a>
+        <a href="{{ url_for('legal.cgv') }}">CGV</a>
+        <a href="{{ url_for('legal.confidentialite') }}">Confidentialité</a>
+      </nav>
     </div>
   </footer>
   {% endblock %}

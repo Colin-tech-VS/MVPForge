@@ -1,9 +1,53 @@
 {% extends "base.html" %}
 {% from "site/_screen_label.html" import screen_label %}
 
-{% block title %}{{ project.title }} — MVPForge{% endblock %}
-{% block description %}{{ project.tagline }}{% endblock %}
+{% block title %}{{ project.title }} — MVP {{ project.category }} à {{ project.formatted_price() }} € | MVPForge{% endblock %}
+{% block description %}{{ project.tagline }} MVP {{ project.category }}{% if project.is_online %} en production{% endif %}{% if project.stack_list %}, stack {{ project.stack_list[:4]|join(', ') }}{% endif %}. À reprendre pour {{ project.formatted_price() }} € sur MVPForge.{% endblock %}
 {% block body_class %}detail-page{% endblock %}
+
+{% block og_type %}product{% endblock %}
+{% if project.cover_image %}
+{% block og_image %}
+  {% set cover_url = site_url + url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) %}
+  <meta property="og:image" content="{{ cover_url }}">
+  <meta name="twitter:image" content="{{ cover_url }}">
+{% endblock %}
+{% endif %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ project.title|tojson }},
+  "description": {{ (project.tagline ~ (' ' ~ project.description if project.description else ''))|striptags|truncate(300)|tojson }},
+  "category": {{ project.category|tojson }},
+  "url": "{{ canonical_url }}",
+  {% if project.cover_image %}"image": "{{ site_url + url_for('site.serve_upload', project_id=project.id, filename=project.cover_image.filename) }}",{% endif %}
+  "brand": { "@type": "Brand", "name": "{{ site_name }}" },
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ project.price }}",
+    "priceCurrency": "EUR",
+    "url": "{{ canonical_url }}",
+    "availability": "{{ 'https://schema.org/SoldOut' if project.is_sold() else 'https://schema.org/InStock' }}",
+    "seller": { "@type": "Organization", "name": "{{ site_name }}" }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ site_url }}{{ url_for('site.home') }}" },
+    { "@type": "ListItem", "position": 2, "name": "Catalogue", "item": "{{ site_url }}{{ url_for('site.catalogue') }}" },
+    { "@type": "ListItem", "position": 3, "name": {{ project.category|tojson }}, "item": "{{ site_url }}{{ url_for('site.categories') }}" },
+    { "@type": "ListItem", "position": 4, "name": {{ project.title|tojson }}, "item": "{{ canonical_url }}" }
+  ]
+}
+</script>
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">

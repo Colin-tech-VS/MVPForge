@@ -22,12 +22,14 @@ def create_app(config_class=Config):
     from routes.admin import admin_bp
     from routes.auth import auth_bp
     from routes.core import core_bp
+    from routes.legal import legal_bp
     from routes.payments import payments_bp
     from routes.purchases import purchases_bp
     from routes.site import site_bp
 
     app.register_blueprint(core_bp)
     app.register_blueprint(site_bp)
+    app.register_blueprint(legal_bp)
     app.register_blueprint(purchases_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(account_bp)
@@ -48,6 +50,20 @@ def create_app(config_class=Config):
         from auth.local_provider import get_current_user
 
         return {"current_user": get_current_user()}
+
+    @app.context_processor
+    def inject_seo():
+        from flask import request
+
+        base = (app.config.get("SITE_URL") or request.url_root).rstrip("/")
+        return {
+            "site_url": base,
+            "canonical_url": base + request.path,
+            "site_name": app.config.get("SITE_NAME", "MVPForge"),
+            "site_tagline": app.config.get("SITE_TAGLINE", ""),
+            "legal_entity": app.config.get("LEGAL_ENTITY", "MVPForge"),
+            "legal_email": app.config.get("LEGAL_EMAIL", ""),
+        }
 
     return app
 

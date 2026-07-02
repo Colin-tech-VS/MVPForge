@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Comment ça marche — MVPForge{% endblock %}
+{% block title %}Comment ça marche — Acheter et vendre un MVP | {{ site_name }}{% endblock %}
+{% block description %}Découvrez comment acheter ou vendre un projet MVP sur {{ site_name }} : catalogue, paiement sécurisé, séquestre des fonds, passation complète et libération au vendeur.{% endblock %}
 {% block body_class %}how-page{% endblock %}
 
 {% block content %}
@@ -8,7 +9,7 @@
   <div class="container">
     <p class="eyebrow">Processus</p>
     <h1 class="page-title">Comment ça marche</h1>
-    <p class="page-subtitle">Trois étapes simples pour passer de l'idée au lancement.</p>
+    <p class="page-subtitle">De la découverte d'un projet à sa reprise complète, en toute sécurité.</p>
   </div>
 </section>
 
@@ -23,13 +24,71 @@
       <article class="step-card reveal reveal-delay-1">
         <span class="step-num">02</span>
         <h3>Achetez en toute confiance</h3>
-        <p>Paiement sécurisé, transfert complet après achat et accompagnement vendeur.</p>
+        <p>Paiement sécurisé via Stripe. Votre règlement est conservé en séquestre par la plateforme le temps de la passation — le vendeur n'est payé qu'après.</p>
       </article>
       <article class="step-card reveal reveal-delay-2">
         <span class="step-num">03</span>
-        <h3>Déployez et lancez</h3>
-        <p>Personnalisez, mettez en ligne sur votre infrastructure et commencez à acquérir vos premiers utilisateurs — en jours, pas en mois.</p>
+        <h3>Recevez et validez la passation</h3>
+        <p>Le vendeur vous transmet code, accès, domaines et données. Vous confirmez la réception, ce qui libère les fonds vers le vendeur.</p>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Un paiement sécurisé par séquestre</h2>
+      <p class="section-desc">Le séquestre (escrow) protège l'acheteur comme le vendeur à chaque transaction.</p>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>1. Paiement bloqué</h3>
+        <p>À l'achat, votre paiement est débité puis <strong>conservé par {{ site_name }}</strong>. Il n'est pas immédiatement versé au vendeur.</p>
+      </div>
+      <div class="info-card">
+        <h3>2. Passation vérifiée</h3>
+        <p>Le vendeur transmet l'ensemble des éléments du projet. Vous vérifiez que tout est bien conforme avant de valider.</p>
+      </div>
+      <div class="info-card">
+        <h3>3. Fonds libérés</h3>
+        <p>Une fois la réception confirmée, les fonds sont reversés au vendeur, déduction faite d'une commission de <strong>10&nbsp;%</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Ce qui est transféré lors d'une vente</h2>
+      <p class="section-desc">La passation couvre tout ce dont vous avez besoin pour reprendre et relancer le produit.</p>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Code source</h3>
+        <p>Accès au dépôt&nbsp;: transfert de propriété ou export complet du code.</p>
+      </div>
+      <div class="info-card">
+        <h3>Déploiement</h3>
+        <p>Runbook, dépendances et variables d'environnement pour remettre le projet en ligne.</p>
+      </div>
+      <div class="info-card">
+        <h3>Secrets &amp; accès</h3>
+        <p>Clés API, identifiants et comptes de service nécessaires au fonctionnement.</p>
+      </div>
+      <div class="info-card">
+        <h3>Domaines &amp; DNS</h3>
+        <p>Noms de domaine et procédure de transfert vers votre compte.</p>
+      </div>
+      <div class="info-card">
+        <h3>Comptes tiers</h3>
+        <p>Hébergeur, analytics, e-mailing, paiements&nbsp;: les accès aux services utilisés.</p>
+      </div>
+      <div class="info-card">
+        <h3>Données &amp; juridique</h3>
+        <p>Export de la base (RGPD si base clients) et cession de propriété intellectuelle.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -39,11 +98,11 @@
     <div class="info-grid">
       <div class="info-card">
         <h3>Pour les acheteurs</h3>
-        <p>Gagnez des mois de développement. Reprenez un produit existant, validé ou en ligne, avec une base technique solide.</p>
+        <p>Gagnez des mois de développement. Reprenez un produit existant, validé ou en ligne, avec une base technique solide — et un paiement protégé par séquestre jusqu'à la passation complète.</p>
       </div>
       <div class="info-card">
         <h3>Pour les vendeurs</h3>
-        <p>Monétisez un MVP que vous n'exploitez plus. Chaque annonce est publiée pour <strong>24 €</strong> (paiement unique Stripe), qu'il soit en production ou hors ligne.</p>
+        <p>Monétisez un MVP que vous n'exploitez plus. Chaque annonce est publiée pour <strong>24&nbsp;€</strong> (paiement unique Stripe), qu'il soit en production ou hors ligne. Vous touchez le prix de vente moins 10&nbsp;% de commission.</p>
       </div>
     </div>
     <div class="section-cta">
@@ -53,6 +112,7 @@
       {% else %}
         <a href="{{ url_for('auth.register') }}" class="btn btn-ghost">Créer un compte</a>
       {% endif %}
+      <a href="{{ url_for('site.faq') }}" class="btn btn-ghost">Consulter la FAQ</a>
     </div>
   </div>
 </section>

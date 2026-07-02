@@ -79,3 +79,59 @@ HANDOVER_STEPS = [
     ("data", "Données", "Export base de données (RGPD si base clients)."),
     ("legal", "Juridique", "Cession de propriété intellectuelle, absence de passif."),
 ]
+
+# Questions fréquentes — affichées sur /site/faq et exposées en données
+# structurées (schema.org FAQPage) pour le référencement (rich snippets Google).
+FAQ_ITEMS = [
+    (
+        "Qu'est-ce qu'un MVP sur MVPForge ?",
+        "Un MVP (Minimum Viable Product) est un produit numérique déjà "
+        "construit : code source, design et parfois trafic et revenus réels. "
+        "Sur MVPForge, vous reprenez un projet fonctionnel plutôt que de partir "
+        "d'une page blanche.",
+    ),
+    (
+        "Comment se passe l'achat d'un projet ?",
+        "Vous payez en ligne via Stripe. Les fonds sont conservés en séquestre "
+        "par la plateforme le temps de la passation (code, déploiement, secrets, "
+        "domaines…). Dès que vous confirmez la bonne réception, les fonds sont "
+        "reversés au vendeur.",
+    ),
+    (
+        "Qu'est-ce que le séquestre (escrow) ?",
+        "Le séquestre protège l'acheteur et le vendeur : votre paiement est "
+        "bloqué par MVPForge et n'est libéré au vendeur qu'après confirmation "
+        "que tous les éléments du projet vous ont bien été transférés.",
+    ),
+    (
+        "Combien coûte la publication d'une annonce ?",
+        "La mise en vente d'un MVP coûte 24 € (paiement unique via Stripe), "
+        "que le projet soit en production ou hors ligne. Une commission de 10 % "
+        "est ensuite prélevée sur le prix de vente lorsque le projet est vendu.",
+    ),
+    (
+        "Que reçoit l'acheteur exactement ?",
+        "Tout ce qui est nécessaire pour reprendre le projet : accès au code "
+        "source, documentation de déploiement, clés et secrets, noms de domaine, "
+        "comptes tiers, export des données et cession de propriété "
+        "intellectuelle.",
+    ),
+    (
+        "Puis-je vendre un projet qui n'est pas encore en ligne ?",
+        "Oui. Vous pouvez vendre un MVP en production avec du trafic mesuré, "
+        "comme un projet abouti mais pas encore lancé. La fiche indique "
+        "clairement le statut du produit.",
+    ),
+    (
+        "Les revenus et statistiques affichés sont-ils vérifiés ?",
+        "Les métriques (visiteurs, revenus, conversions) sont déclarées par le "
+        "vendeur sur la fiche du projet. Nous vous encourageons à demander des "
+        "preuves (analytics, exports) avant de finaliser un achat.",
+    ),
+    (
+        "Comment contacter MVPForge ?",
+        "Vous pouvez nous écrire à tout moment via l'adresse indiquée sur la "
+        "page des mentions légales pour toute question sur un projet, un "
+        "paiement ou une passation.",
+    ),
+]

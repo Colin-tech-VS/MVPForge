@@ -14,6 +14,21 @@ def _normalize_database_url(url: str | None) -> str | None:
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
+
+    # URL publique du site (sans slash final), ex: https://mvpforge.com
+    # Utilisée pour les URLs canoniques, Open Graph et le sitemap.xml.
+    # Si vide, on retombe sur l'origine de la requête (request.url_root).
+    SITE_URL = os.environ.get("SITE_URL", "").rstrip("/")
+    # Identité de la plateforme (SEO + pages légales).
+    SITE_NAME = os.environ.get("SITE_NAME", "MVPForge")
+    SITE_TAGLINE = os.environ.get(
+        "SITE_TAGLINE",
+        "La marketplace pour acheter et vendre des projets MVP prêts à lancer.",
+    )
+    # Coordonnées légales (mentions légales, CGV, RGPD…).
+    LEGAL_ENTITY = os.environ.get("LEGAL_ENTITY", "MVPForge")
+    LEGAL_EMAIL = os.environ.get("LEGAL_EMAIL", "contact@mvpforge.com")
+
     SQLALCHEMY_DATABASE_URI = _normalize_database_url(
         os.environ.get("DATABASE_URL")
     ) or f"sqlite:///{BASE_DIR / 'instance' / 'mvpforge.db'}"
